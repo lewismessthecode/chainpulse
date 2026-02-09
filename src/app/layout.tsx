@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { Sidebar } from "@/components/layout/sidebar";
+import { MobileNav } from "@/components/layout/mobile-nav";
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-body",
@@ -16,6 +18,22 @@ export const metadata: Metadata = {
   title: "ChainPulse — BNB Chain Intelligence",
   description:
     "AI-powered onchain market intelligence dashboard for BNB Chain DeFi",
+  openGraph: {
+    title: "ChainPulse — BNB Chain Intelligence",
+    description:
+      "AI-powered onchain market intelligence dashboard for BNB Chain DeFi",
+    type: "website",
+    siteName: "ChainPulse",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ChainPulse — BNB Chain Intelligence",
+    description:
+      "AI-powered onchain market intelligence dashboard for BNB Chain DeFi",
+  },
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
@@ -32,14 +50,18 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${plusJakarta.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${plusJakarta.variable} ${jetbrainsMono.variable} antialiased bg-void text-warm-white`}
         style={{
           fontFamily: "var(--font-body)",
           ["--font-display" as string]:
             "'Instrument Serif', Georgia, serif",
         }}
       >
-        {children}
+        <Sidebar />
+        <main className="md:ml-14 min-h-screen p-4 md:p-6 pb-20 md:pb-6">
+          {children}
+        </main>
+        <MobileNav />
       </body>
     </html>
   );
