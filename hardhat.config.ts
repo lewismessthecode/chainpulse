@@ -5,6 +5,9 @@ dotenv.config({ path: ".env.local" });
 
 const config: HardhatUserConfig = {
   solidity: "0.8.20",
+  paths: {
+    tests: "./test/contracts",
+  },
   networks: {
     bscTestnet: {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",
