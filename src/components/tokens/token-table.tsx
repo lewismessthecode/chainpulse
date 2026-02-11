@@ -111,8 +111,10 @@ export function TokenTable({ tokens }: TokenTableProps) {
                 {formatUsd(token.liquidity)}
               </td>
               <td className="p-4">
-                {token.sparkline && token.sparkline.length > 1 && (
+                {token.sparkline && token.sparkline.length > 1 ? (
                   <Sparkline data={token.sparkline} />
+                ) : (
+                  <span className="text-xs text-warm-muted font-mono">--</span>
                 )}
               </td>
             </tr>

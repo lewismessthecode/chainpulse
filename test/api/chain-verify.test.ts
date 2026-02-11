@@ -11,7 +11,7 @@ describe("POST /api/chain/verify", () => {
   it("should verify a prediction hash", async () => {
     const request = new Request("http://localhost:3000/api/chain/verify", {
       method: "POST",
-      body: JSON.stringify({ predictionId: 0, contentHash: "0xabc123" }),
+      body: JSON.stringify({ predictionId: 0, content: '{"test":"data"}' }),
     });
     const response = await POST(request);
     const data = await response.json();

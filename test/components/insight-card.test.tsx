@@ -8,7 +8,7 @@ const mockInsight = {
   title: "BSC TVL surges past $5B",
   summary: "Total value locked on BSC has increased by 12% in the last 24 hours.",
   fullAnalysis: "Detailed analysis text here.",
-  sentimentScore: 0.8,
+  sentimentScore: 80,
   confidence: 0.9,
   dataPoints: ["TVL: $5.2B", "24h Change: +12%"],
   contentHash: "0xabc123def456",
@@ -30,7 +30,7 @@ describe("InsightCard", () => {
 
   it("renders sentiment indicator", () => {
     render(<InsightCard insight={mockInsight} />);
-    expect(screen.getByText(/0.8/)).toBeInTheDocument();
+    expect(screen.getByText(/\+80/)).toBeInTheDocument();
   });
 
   it("renders on-chain proof when txHash exists", () => {

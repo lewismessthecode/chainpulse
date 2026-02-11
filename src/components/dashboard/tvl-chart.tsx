@@ -53,6 +53,9 @@ export function TvlChart({ data }: TvlChartProps) {
               stroke="#E2A336"
               strokeWidth={1.5}
               fill="rgba(226, 163, 54, 0.08)"
+              isAnimationActive={true}
+              animationDuration={800}
+              animationEasing="ease-out"
             />
           </AreaChart>
         </ResponsiveContainer>

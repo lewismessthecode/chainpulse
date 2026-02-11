@@ -47,7 +47,14 @@ export function VolumeChart({ data }: VolumeChartProps) {
                 color: "#E8E4DD",
               }}
             />
-            <Bar dataKey="value" fill="#E2A336" opacity={0.8} />
+            <Bar
+              dataKey="value"
+              fill="#E2A336"
+              opacity={0.8}
+              isAnimationActive={true}
+              animationDuration={800}
+              animationEasing="ease-out"
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>

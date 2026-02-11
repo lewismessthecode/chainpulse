@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { LiveIndicator } from "@/components/shared/live-indicator";
 
 const PAGE_TITLES: Record<string, string> = {
   "/": "Market Overview",
@@ -8,6 +9,7 @@ const PAGE_TITLES: Record<string, string> = {
   "/tokens": "Token Analytics",
   "/whales": "Whale Monitor",
   "/predictions": "Prediction History",
+  "/build-log": "AI Build Log",
 };
 
 export function Header() {
@@ -29,7 +31,10 @@ export function Header() {
       >
         {title}
       </h1>
-      <span className="text-xs text-warm-muted font-mono">{dateStr}</span>
+      <div className="flex items-center gap-3">
+        <LiveIndicator />
+        <span className="text-xs text-warm-muted font-mono">{dateStr}</span>
+      </div>
     </header>
   );
 }

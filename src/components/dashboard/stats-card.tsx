@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import {
   Tooltip,
   TooltipTrigger,
@@ -30,7 +31,11 @@ function formatValue(value: number, prefix?: string, suffix?: string): string {
 
 export function StatsCard({ label, value, prefix, suffix, change, description }: StatsCardProps) {
   return (
-    <div className="bg-surface border border-[#1A1A1A] p-5 hover:border-amber transition-colors duration-150">
+    <motion.div
+      className="bg-surface border border-[#1A1A1A] p-5 hover:border-amber transition-colors duration-150"
+      whileHover={{ y: -2 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
+    >
       <p className="text-[11px] uppercase tracking-[0.08em] text-warm-muted mb-3">
         {label}
         {description && (
@@ -66,6 +71,6 @@ export function StatsCard({ label, value, prefix, suffix, change, description }:
           {change >= 0 ? "+" : ""}{change.toFixed(1)}%
         </span>
       )}
-    </div>
+    </motion.div>
   );
 }

@@ -30,7 +30,7 @@ describe("PredictionTable", () => {
     expect(screen.getByText(/Potential risk/)).toBeInTheDocument();
   });
 
-  it("renders content hash links", () => {
+  it("renders content hash as verification ID", () => {
     render(<PredictionTable predictions={mockPredictions} />);
     expect(screen.getByText(/0xabc1/)).toBeInTheDocument();
   });

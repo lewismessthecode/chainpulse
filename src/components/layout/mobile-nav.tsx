@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Brain, Coins, Fish, History } from "lucide-react";
+import { LayoutDashboard, Brain, Coins, Fish, History, Bot } from "lucide-react";
 
 const NAV_ITEMS = [
   { href: "/", icon: LayoutDashboard, label: "Home" },
@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: "/tokens", icon: Coins, label: "Tokens" },
   { href: "/whales", icon: Fish, label: "Whales" },
   { href: "/predictions", icon: History, label: "History" },
+  { href: "/build-log", icon: Bot, label: "Build" },
 ] as const;
 
 export function MobileNav() {

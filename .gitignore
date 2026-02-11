@@ -46,6 +46,12 @@ yarn-error.log*
 /test-results
 /playwright-report
 
+# generated/temp files
+genWallet.js
+/ignition
+/.reports
+/codemaps
+
 # vercel
 .vercel
 

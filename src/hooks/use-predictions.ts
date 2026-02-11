@@ -5,11 +5,11 @@ import { fetcher } from "./fetcher";
 import type { OnchainPrediction } from "@/lib/types";
 
 export function usePredictions() {
-  const { data, error, isLoading } = useSWR<{ predictions: OnchainPrediction[] }>(
+  const { data, error, isLoading, mutate } = useSWR<{ predictions: OnchainPrediction[] }>(
     "/api/chain/predictions",
     fetcher,
     { refreshInterval: 120_000 }
   );
 
-  return { predictions: data?.predictions ?? [], error, isLoading };
+  return { predictions: data?.predictions ?? [], error, isLoading, mutate };
 }

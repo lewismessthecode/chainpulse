@@ -2,8 +2,12 @@ import { ethers } from "ethers";
 import { chainConfig } from "./config";
 import { abi } from "./abi";
 
+const bscNetwork = ethers.Network.from(chainConfig.chainId);
+
 export function getProvider(): ethers.JsonRpcProvider {
-  return new ethers.JsonRpcProvider(chainConfig.rpcUrl);
+  return new ethers.JsonRpcProvider(chainConfig.rpcUrl, bscNetwork, {
+    staticNetwork: bscNetwork,
+  });
 }
 
 export function getReadContract(): ethers.Contract {

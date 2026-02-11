@@ -5,11 +5,11 @@ import type { MarketOverview } from "@/lib/types";
 import { fetcher } from "./fetcher";
 
 export function useMarketData() {
-  const { data, error, isLoading } = useSWR<MarketOverview>(
+  const { data, error, isLoading, mutate } = useSWR<MarketOverview>(
     "/api/market/overview",
     fetcher,
     { refreshInterval: 60_000 }
   );
 
-  return { data, error, isLoading };
+  return { data, error, isLoading, mutate };
 }

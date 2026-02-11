@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Brain, Coins, Fish, History } from "lucide-react";
+import { LayoutDashboard, Brain, Coins, Fish, History, Bot } from "lucide-react";
 import { LiveIndicator } from "@/components/shared/live-indicator";
 
 const NAV_ITEMS = [
@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: "/tokens", icon: Coins, label: "Tokens" },
   { href: "/whales", icon: Fish, label: "Whales" },
   { href: "/predictions", icon: History, label: "Predictions" },
+  { href: "/build-log", icon: Bot, label: "Build Log" },
 ] as const;
 
 export function Sidebar() {

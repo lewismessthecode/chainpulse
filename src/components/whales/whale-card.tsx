@@ -1,9 +1,19 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import type { WhaleAlert } from "@/lib/types";
 
 interface WhaleCardProps {
   alert: WhaleAlert;
+}
+
+const KNOWN_EXCHANGES = ["binance", "coinbase", "kraken", "okx", "bybit", "kucoin", "gate.io", "htx", "bitfinex"];
+
+function isExchange(label: string | null): boolean {
+  if (!label) return false;
+  const lower = label.toLowerCase();
+  return KNOWN_EXCHANGES.some((ex) => lower.includes(ex));
 }
 
 function formatValue(value: number): string {
@@ -26,8 +36,20 @@ export function WhaleCard({ alert }: WhaleCardProps) {
     minute: "2-digit",
   });
 
+  const fromExchange = isExchange(alert.fromLabel);
+  const toExchange = isExchange(alert.toLabel);
+  const flowBadge = fromExchange && !toExchange
+    ? { label: "OUTFLOW", color: "text-[#F87171] bg-[rgba(248,113,113,0.12)]" }
+    : !fromExchange && toExchange
+    ? { label: "INFLOW", color: "text-[#34D399] bg-[rgba(52,211,153,0.12)]" }
+    : null;
+
   return (
-    <div className="bg-surface border border-[#1A1A1A] p-4 hover:border-amber transition-colors duration-150">
+    <motion.div
+      className="bg-surface border border-[#1A1A1A] p-4 hover:border-amber transition-colors duration-150"
+      whileHover={{ y: -2 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
+    >
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
           <span className={`px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] font-mono ${
@@ -37,6 +59,11 @@ export function WhaleCard({ alert }: WhaleCardProps) {
           }`}>
             {alert.type}
           </span>
+          {flowBadge && (
+            <span className={`px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] font-mono ${flowBadge.color}`}>
+              {flowBadge.label}
+            </span>
+          )}
           <span className="text-[10px] text-warm-muted font-mono">{timeStr}</span>
         </div>
         <a
@@ -66,9 +93,9 @@ export function WhaleCard({ alert }: WhaleCardProps) {
 
       <div className="flex items-center gap-2 text-xs font-mono text-warm-muted">
         <span className="text-warm-gray">{formatAddress(alert.from, alert.fromLabel)}</span>
-        <span className="text-warm-muted">&rarr;</span>
+        <ArrowRight className="w-3 h-3 text-warm-muted" />
         <span className="text-warm-gray">{formatAddress(alert.to, alert.toLabel)}</span>
       </div>
-    </div>
+    </motion.div>
   );
 }

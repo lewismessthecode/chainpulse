@@ -1,5 +1,6 @@
 "use client";
 
+import { History } from "lucide-react";
 import type { OnchainPrediction } from "@/lib/types";
 
 interface PredictionTableProps {
@@ -73,21 +74,29 @@ export function PredictionTable({ predictions }: PredictionTableProps) {
                 {pred.summary}
               </td>
               <td className="p-4">
-                <a
-                  href={`https://testnet.bscscan.com/tx/${pred.contentHash}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs font-mono text-amber hover:text-amber-dim underline underline-offset-2 transition-colors"
-                >
+                <span className="text-xs font-mono text-warm-muted">
                   {truncateHash(pred.contentHash)}
-                </a>
+                </span>
+                {process.env.NEXT_PUBLIC_CONTRACT_ADDRESS && (
+                  <a
+                    href={`https://testnet.bscscan.com/address/${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}#readContract`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-2 text-[10px] font-mono text-amber hover:text-amber-dim underline underline-offset-2 transition-colors"
+                  >
+                    Contract
+                  </a>
+                )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
       {predictions.length === 0 && (
-        <p className="text-warm-muted text-sm text-center py-12">No predictions recorded yet.</p>
+        <div className="flex flex-col items-center justify-center py-16">
+          <History className="w-8 h-8 text-warm-muted/40 mb-3" />
+          <p className="text-warm-muted text-sm">No predictions recorded yet.</p>
+        </div>
       )}
     </div>
   );

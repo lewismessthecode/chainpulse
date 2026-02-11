@@ -1,9 +1,13 @@
 "use client";
 
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { ShieldCheck } from "lucide-react";
 import type { AIInsight } from "@/lib/types";
 import { PulseLine } from "./pulse-line";
 import { SentimentBadge } from "./sentiment-badge";
 import { OnchainProof } from "./onchain-proof";
+import { VerificationPanel } from "./verification-panel";
 
 interface InsightCardProps {
   insight: AIInsight;
@@ -17,11 +21,16 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 export function InsightCard({ insight }: InsightCardProps) {
+  const [showVerify, setShowVerify] = useState(false);
   const categoryStyle =
     CATEGORY_COLORS[insight.category] ?? "text-warm-gray bg-elevated";
 
   return (
-    <article className="bg-surface border border-[#1A1A1A] p-5 hover:border-amber transition-colors duration-150">
+    <motion.article
+      className="bg-surface border border-[#1A1A1A] p-5 hover:border-amber transition-colors duration-150"
+      whileHover={{ y: -2 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
+    >
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
           <span
@@ -57,10 +66,21 @@ export function InsightCard({ insight }: InsightCardProps) {
       </div>
 
       <div className="flex items-center justify-between pt-3 border-t border-[#1A1A1A]">
-        <OnchainProof
-          txHash={insight.txHash}
-          contentHash={insight.contentHash}
-        />
+        <div className="flex items-center gap-3">
+          <OnchainProof
+            txHash={insight.txHash}
+            contentHash={insight.contentHash}
+          />
+          {insight.predictionId !== undefined && (
+            <button
+              onClick={() => setShowVerify((prev) => !prev)}
+              className="inline-flex items-center gap-1 text-[10px] font-mono text-warm-muted hover:text-amber transition-colors"
+            >
+              <ShieldCheck className="w-3 h-3" />
+              {showVerify ? "Hide" : "Verify"}
+            </button>
+          )}
+        </div>
         <span className="text-[10px] text-warm-muted font-mono">
           {new Date(insight.createdAt).toLocaleDateString("en-US", {
             month: "short",
@@ -70,6 +90,8 @@ export function InsightCard({ insight }: InsightCardProps) {
           })}
         </span>
       </div>
-    </article>
+
+      <VerificationPanel insight={insight} isOpen={showVerify} />
+    </motion.article>
   );
 }

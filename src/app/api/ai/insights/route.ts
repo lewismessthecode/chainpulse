@@ -4,7 +4,13 @@ import path from "node:path";
 
 import type { AIInsight } from "@/lib/types";
 
-const INSIGHTS_PATH = path.join(process.cwd(), "data", "insights.json");
+const TMP_PATH = path.join("/tmp", "insights.json");
+const BUNDLED_PATH = path.join(process.cwd(), "data", "insights.json");
+
+function getInsightsPath(): string {
+  if (existsSync(TMP_PATH)) return TMP_PATH;
+  return BUNDLED_PATH;
+}
 
 export async function GET(request: Request): Promise<NextResponse> {
   try {
@@ -15,8 +21,9 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     let insights: AIInsight[] = [];
 
-    if (existsSync(INSIGHTS_PATH)) {
-      insights = JSON.parse(readFileSync(INSIGHTS_PATH, "utf-8"));
+    const insightsPath = getInsightsPath();
+    if (existsSync(insightsPath)) {
+      insights = JSON.parse(readFileSync(insightsPath, "utf-8"));
     }
 
     if (category) {
