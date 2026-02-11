@@ -13,6 +13,7 @@ vi.mock("@/lib/data-sources/geckoterminal", () => ({
         priceChange24h: 3.2,
       },
     ]),
+    getPoolOhlcv: vi.fn().mockResolvedValue([2.40, 2.42, 2.45, 2.50]),
   },
 }));
 
@@ -28,5 +29,6 @@ describe("GET /api/market/tokens", () => {
     expect(Array.isArray(data)).toBe(true);
     expect(data[0]).toHaveProperty("name");
     expect(data[0]).toHaveProperty("price");
+    expect(data[0].sparkline).toEqual([2.40, 2.42, 2.45, 2.50]);
   });
 });

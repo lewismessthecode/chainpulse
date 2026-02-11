@@ -30,7 +30,7 @@ describe("DefiLlamaClient", () => {
       ok: true,
       json: () =>
         Promise.resolve([
-          { name: "PancakeSwap", chains: ["BSC"], tvl: 2100000000, change_1d: 1.8 },
+          { name: "PancakeSwap", chains: ["Binance"], tvl: 2100000000, change_1d: 1.8 },
           { name: "Uniswap", chains: ["Ethereum"], tvl: 5000000000, change_1d: 0.5 },
         ]),
     });
@@ -45,14 +45,17 @@ describe("DefiLlamaClient", () => {
       ok: true,
       json: () =>
         Promise.resolve({
-          totalVolume: 892000000,
-          changeVolume1d: -1.2,
+          total24h: 892000000,
+          change_1d: -1.2,
+          totalDataChart: [[1707000000, 500000000], [1707100000, 600000000]],
           protocols: [],
         }),
     });
 
     const result = await client.getBscDexVolumes();
-    expect(result.totalVolume).toBe(892000000);
+    expect(result.total24h).toBe(892000000);
+    expect(result.totalDataChart).toHaveLength(2);
+    expect(result.totalDataChart[0]).toEqual([1707000000, 500000000]);
   });
 
   it("should throw on API errors", async () => {

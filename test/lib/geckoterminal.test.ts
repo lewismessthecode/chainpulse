@@ -90,6 +90,37 @@ describe("GeckoTerminalClient", () => {
     expect(result.symbol).toBe("CAKE");
   });
 
+  it("should fetch pool OHLCV data and return close prices", async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          data: {
+            attributes: {
+              ohlcv_list: [
+                [1707000000, 2.40, 2.50, 2.35, 2.45, 100000],
+                [1707003600, 2.45, 2.55, 2.40, 2.50, 120000],
+              ],
+            },
+          },
+        }),
+    });
+
+    const result = await client.getPoolOhlcv("0x123");
+    expect(result).toEqual([2.45, 2.50]);
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.stringContaining("pools/0x123/ohlcv/hour"),
+      expect.any(Object)
+    );
+  });
+
+  it("should return empty array on OHLCV fetch failure", async () => {
+    mockFetch.mockResolvedValueOnce({ ok: false, status: 429 });
+
+    const result = await client.getPoolOhlcv("0x123");
+    expect(result).toEqual([]);
+  });
+
   it("should throw on API errors", async () => {
     mockFetch.mockResolvedValueOnce({ ok: false, status: 429 });
     await expect(client.getTrendingPools()).rejects.toThrow();

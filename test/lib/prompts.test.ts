@@ -35,6 +35,9 @@ describe("buildAnalysisPrompt", () => {
       tokenSymbol: "BNB",
       timestamp: Date.now(),
       type: "transfer",
+      fromLabel: "Binance",
+      toLabel: null,
+      usdValue: 15_750_000,
     },
   ];
 
@@ -58,10 +61,12 @@ describe("buildAnalysisPrompt", () => {
     expect(prompt).toContain("315.42");
   });
 
-  it("should include whale activity", () => {
+  it("should include whale activity with USD values and labels", () => {
     const prompt = buildAnalysisPrompt({ overview, tokens, whales });
     expect(prompt).toContain("transfer");
     expect(prompt).toContain("50,000");
+    expect(prompt).toContain("$15,750,000");
+    expect(prompt).toContain("from Binance");
   });
 
   it("should include JSON response instructions", () => {

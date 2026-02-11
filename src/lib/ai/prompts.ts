@@ -28,10 +28,12 @@ export function buildAnalysisPrompt(data: {
 
   const whaleLines = data.whales
     .slice(0, 5)
-    .map(
-      (w) =>
-        `- ${w.type}: ${w.value.toLocaleString()} ${w.tokenSymbol} (${w.from.slice(0, 8)}... → ${w.to.slice(0, 8)}...)`,
-    )
+    .map((w) => {
+      const usd = w.usdValue != null ? `$${w.usdValue.toLocaleString("en-US", { maximumFractionDigits: 0 })}` : "unknown";
+      const fromLabel = w.fromLabel ?? `${w.from.slice(0, 8)}...`;
+      const toLabel = w.toLabel ?? `${w.to.slice(0, 8)}...`;
+      return `- ${w.type}: ${usd} (${w.value.toLocaleString()} ${w.tokenSymbol}) from ${fromLabel} → ${toLabel}`;
+    })
     .join("\n");
 
   return `You are ChainPulse, an autonomous AI market intelligence agent analyzing BNB Chain DeFi.

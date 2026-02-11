@@ -11,6 +11,9 @@ const mockAlert = {
   tokenSymbol: "BNB",
   timestamp: 1707580800,
   type: "transfer" as const,
+  fromLabel: "Binance" as string | null,
+  toLabel: null as string | null,
+  usdValue: 39_375_000 as number | null,
 };
 
 describe("WhaleCard", () => {

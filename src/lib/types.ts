@@ -38,6 +38,9 @@ export interface WhaleAlert {
   tokenSymbol: string;
   timestamp: number;
   type: "transfer" | "swap";
+  fromLabel: string | null;
+  toLabel: string | null;
+  usdValue: number | null;
 }
 
 export interface AIInsight {

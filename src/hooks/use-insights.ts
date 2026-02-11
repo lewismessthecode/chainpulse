@@ -2,8 +2,7 @@
 
 import useSWR from "swr";
 import type { AIInsight } from "@/lib/types";
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+import { fetcher } from "./fetcher";
 
 export function useInsights() {
   const { data, error, isLoading } = useSWR<{ insights: AIInsight[] }>(

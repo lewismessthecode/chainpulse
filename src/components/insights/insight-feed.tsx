@@ -47,9 +47,14 @@ export function InsightFeed({ insights }: InsightFeedProps) {
           <InsightCard key={insight.id} insight={insight} />
         ))}
         {filtered.length === 0 && (
-          <p className="text-warm-muted text-sm text-center py-12">
-            No insights found.
-          </p>
+          <div className="text-center py-12">
+            <p className="text-warm-muted text-sm">
+              No insights yet. AI analysis hasn&apos;t been triggered.
+            </p>
+            <p className="text-warm-muted/60 text-xs mt-2">
+              Send a POST request to /api/ai/analyze to generate insights.
+            </p>
+          </div>
         )}
       </div>
     </div>

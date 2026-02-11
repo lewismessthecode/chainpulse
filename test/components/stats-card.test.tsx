@@ -19,4 +19,14 @@ describe("StatsCard", () => {
     const change = screen.getByText(/1.2%/);
     expect(change.className).toContain("text-[#F87171]");
   });
+
+  it("renders info icon when description is provided", () => {
+    render(<StatsCard label="TVL" value={100} description="Test description" />);
+    expect(screen.getByLabelText("Info")).toBeInTheDocument();
+  });
+
+  it("does not render info icon when no description", () => {
+    render(<StatsCard label="TVL" value={100} />);
+    expect(screen.queryByLabelText("Info")).not.toBeInTheDocument();
+  });
 });

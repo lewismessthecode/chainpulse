@@ -2,8 +2,7 @@
 
 import useSWR from "swr";
 import type { TokenData } from "@/lib/types";
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+import { fetcher } from "./fetcher";
 
 export function useTokens() {
   const { data, error, isLoading } = useSWR<TokenData[]>(

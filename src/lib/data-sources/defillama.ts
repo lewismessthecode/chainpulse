@@ -21,8 +21,9 @@ interface BscProtocol {
 }
 
 interface DexVolumes {
-  totalVolume: number;
-  changeVolume1d: number;
+  total24h: number;
+  change_1d: number;
+  totalDataChart: [number, number][];
   protocols: Array<{ name: string; total24h: number }>;
 }
 
@@ -43,7 +44,7 @@ export class DefiLlamaClient {
     const all = await this.fetchJson<RawProtocol[]>("/protocols");
 
     return all
-      .filter((p) => p.chains.includes("BSC"))
+      .filter((p) => p.chains.includes("Binance"))
       .sort((a, b) => b.tvl - a.tvl)
       .slice(0, limit)
       .map((p) => ({

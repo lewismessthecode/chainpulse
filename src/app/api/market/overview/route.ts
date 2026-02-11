@@ -31,9 +31,12 @@ export async function GET(): Promise<NextResponse> {
         })),
       },
       volume: {
-        current: volumes.totalVolume,
-        change24h: volumes.changeVolume1d,
-        history: [],
+        current: volumes.total24h ?? 0,
+        change24h: volumes.change_1d ?? 0,
+        history: (volumes.totalDataChart ?? []).slice(-30).map((point) => ({
+          date: new Date(point[0] * 1000).toISOString().split("T")[0],
+          value: point[1],
+        })),
       },
       protocolCount: protocols.length,
       topProtocols: protocols.map((protocol) => ({

@@ -1,13 +1,33 @@
 import { NextResponse } from "next/server";
-import { bscScan } from "@/lib/data-sources/bscscan";
+import { moralis } from "@/lib/data-sources/moralis";
 import { cache } from "@/lib/cache";
 import { CACHE_TTL, WHALE_MIN_VALUE_USD } from "@/lib/constants";
 import type { WhaleAlert } from "@/lib/types";
 
-const WATCHED_ADDRESSES = [
-  "0x8894E0a0c962CB723c1853AE3ad79AC7a74ed908", // PancakeSwap deployer
-  "0x10ED43C718714eb63d5aA57B78B54704E256024E", // PancakeSwap Router
+const MIN_SECURITY_SCORE = 50;
+
+const WATCHED_ADDRESSES: { address: string; limit: number }[] = [
+  { address: "0xF977814e90dA44bFA03b6295A0616a897441aceC", limit: 100 }, // Binance Hot Wallet 14
+  { address: "0x28C6c06298d514Db089934071355E5743bf21d60", limit: 50 },  // Binance Hot Wallet 6
 ];
+
+async function fetchPriceMap(tokenAddresses: string[]): Promise<Map<string, number>> {
+  const priceMap = new Map<string, number>();
+  const results = await Promise.all(
+    tokenAddresses.map(async (addr) => {
+      try {
+        const price = await moralis.getTokenPrice(addr);
+        return { addr, price };
+      } catch {
+        return { addr, price: 0 };
+      }
+    }),
+  );
+  for (const { addr, price } of results) {
+    priceMap.set(addr.toLowerCase(), price);
+  }
+  return priceMap;
+}
 
 export async function GET(): Promise<NextResponse> {
   try {
@@ -15,28 +35,43 @@ export async function GET(): Promise<NextResponse> {
     if (cached) return NextResponse.json(cached);
 
     const transfersByAddress = await Promise.all(
-      WATCHED_ADDRESSES.map((addr) => bscScan.getTokenTransfers(addr, 20)),
+      WATCHED_ADDRESSES.map(async ({ address, limit }) => {
+        try {
+          return await moralis.getTokenTransfers(address, limit);
+        } catch {
+          return [];
+        }
+      }),
     );
 
-    const whales: WhaleAlert[] = transfersByAddress
+    const qualityTransfers = transfersByAddress
       .flat()
+      .filter((tx) => !tx.possibleSpam && tx.securityScore >= MIN_SECURITY_SCORE);
+
+    const uniqueTokens = [...new Set(qualityTransfers.map((tx) => tx.tokenAddress.toLowerCase()))];
+    const priceMap = await fetchPriceMap(uniqueTokens);
+
+    const whales: WhaleAlert[] = qualityTransfers
       .map((tx) => {
-        const decimals = parseInt(tx.tokenDecimal, 10) || 18;
-        const rawValue = parseFloat(tx.value) / Math.pow(10, decimals);
+        const price = priceMap.get(tx.tokenAddress.toLowerCase()) ?? 0;
+        const usdValue = tx.valueDecimal * price;
 
         return {
           txHash: tx.hash,
           from: tx.from,
           to: tx.to,
-          value: rawValue,
+          value: tx.valueDecimal,
           token: tx.tokenName,
           tokenSymbol: tx.tokenSymbol,
           timestamp: parseInt(tx.timeStamp, 10),
           type: "transfer" as const,
+          fromLabel: tx.fromEntity,
+          toLabel: tx.toEntity,
+          usdValue: price > 0 ? usdValue : null,
         };
       })
-      .filter((whale) => whale.value >= WHALE_MIN_VALUE_USD)
-      .sort((a, b) => b.timestamp - a.timestamp);
+      .filter((whale) => whale.usdValue !== null && whale.usdValue >= WHALE_MIN_VALUE_USD)
+      .sort((a, b) => (b.usdValue ?? 0) - (a.usdValue ?? 0));
 
     cache.set("market-whales", whales, CACHE_TTL.WHALES);
     return NextResponse.json(whales);

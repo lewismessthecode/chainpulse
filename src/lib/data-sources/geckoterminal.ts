@@ -131,6 +131,19 @@ export class GeckoTerminalClient {
     return data.data.slice(0, limit).map(mapPoolData);
   }
 
+  async getPoolOhlcv(poolAddress: string): Promise<number[]> {
+    try {
+      const data = await this.rateLimitedFetch<{
+        data: { attributes: { ohlcv_list: number[][] } };
+      }>(
+        `/networks/${NETWORK}/pools/${poolAddress}/ohlcv/hour?aggregate=1&limit=24`
+      );
+      return data.data.attributes.ohlcv_list.map((candle) => candle[4]);
+    } catch {
+      return [];
+    }
+  }
+
   async getTokenInfo(address: string): Promise<TokenInfo> {
     const data = await this.rateLimitedFetch<{
       data: { id: string; attributes: TokenAttributes };

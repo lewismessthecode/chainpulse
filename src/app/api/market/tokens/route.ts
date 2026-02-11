@@ -11,7 +11,13 @@ export async function GET(): Promise<NextResponse> {
 
     const pools = await geckoTerminal.getTopPools("h24_volume_usd_desc", 20);
 
-    const tokens: TokenData[] = pools.map((pool) => ({
+    const sparklines = await Promise.all(
+      pools.slice(0, 10).map((pool) =>
+        geckoTerminal.getPoolOhlcv(pool.id.replace("bsc_", ""))
+      )
+    );
+
+    const tokens: TokenData[] = pools.map((pool, i) => ({
       name: pool.name,
       symbol: pool.name.split("/")[0],
       address: pool.id.replace("bsc_", ""),
@@ -19,6 +25,7 @@ export async function GET(): Promise<NextResponse> {
       priceChange24h: pool.priceChange24h,
       volume24h: pool.volume24h,
       liquidity: pool.liquidity,
+      sparkline: i < 10 ? sparklines[i] : undefined,
     }));
 
     cache.set("market-tokens", tokens, CACHE_TTL.TOKENS);

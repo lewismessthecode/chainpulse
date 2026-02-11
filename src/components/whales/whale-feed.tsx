@@ -8,7 +8,7 @@ interface WhaleFeedProps {
 }
 
 export function WhaleFeed({ alerts }: WhaleFeedProps) {
-  const sorted = [...alerts].sort((a, b) => b.timestamp - a.timestamp);
+  const sorted = [...(alerts ?? [])].sort((a, b) => b.timestamp - a.timestamp);
 
   return (
     <div className="space-y-3">

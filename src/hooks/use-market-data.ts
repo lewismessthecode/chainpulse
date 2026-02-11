@@ -2,8 +2,7 @@
 
 import useSWR from "swr";
 import type { MarketOverview } from "@/lib/types";
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+import { fetcher } from "./fetcher";
 
 export function useMarketData() {
   const { data, error, isLoading } = useSWR<MarketOverview>(

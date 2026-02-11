@@ -7,11 +7,16 @@ interface WhaleCardProps {
 }
 
 function formatValue(value: number): string {
-  return value.toLocaleString("en-US");
+  return value.toLocaleString("en-US", { maximumFractionDigits: 0 });
 }
 
 function truncateAddress(address: string): string {
   return address.slice(0, 6) + "..." + address.slice(-4);
+}
+
+function formatAddress(address: string, label: string | null): string {
+  if (label) return `${label} (${truncateAddress(address)})`;
+  return truncateAddress(address);
 }
 
 export function WhaleCard({ alert }: WhaleCardProps) {
@@ -44,17 +49,25 @@ export function WhaleCard({ alert }: WhaleCardProps) {
         </a>
       </div>
 
-      <div className="flex items-baseline gap-2 mb-2">
+      <div className="flex items-baseline gap-2 mb-1">
         <span className="text-2xl font-mono tabular-nums text-warm-white">
           {formatValue(alert.value)}
         </span>
         <span className="text-sm font-mono text-amber">{alert.tokenSymbol}</span>
       </div>
 
+      {alert.usdValue != null && (
+        <div className="mb-2">
+          <span className="text-sm font-mono tabular-nums text-warm-muted">
+            ≈ ${formatValue(alert.usdValue)}
+          </span>
+        </div>
+      )}
+
       <div className="flex items-center gap-2 text-xs font-mono text-warm-muted">
-        <span className="text-warm-gray">{truncateAddress(alert.from)}</span>
+        <span className="text-warm-gray">{formatAddress(alert.from, alert.fromLabel)}</span>
         <span className="text-warm-muted">&rarr;</span>
-        <span className="text-warm-gray">{truncateAddress(alert.to)}</span>
+        <span className="text-warm-gray">{formatAddress(alert.to, alert.toLabel)}</span>
       </div>
     </div>
   );

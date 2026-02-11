@@ -2,8 +2,7 @@
 
 import useSWR from "swr";
 import type { WhaleAlert } from "@/lib/types";
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+import { fetcher } from "./fetcher";
 
 export function useWhaleAlerts() {
   const { data, error, isLoading } = useSWR<WhaleAlert[]>(

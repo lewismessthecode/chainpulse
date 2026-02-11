@@ -11,8 +11,9 @@ vi.mock("@/lib/data-sources/defillama", () => ({
       { name: "PancakeSwap", tvl: 2100000000, change24h: 1.8 },
     ]),
     getBscDexVolumes: vi.fn().mockResolvedValue({
-      totalVolume: 892000000,
-      changeVolume1d: -1.2,
+      total24h: 892000000,
+      change_1d: -1.2,
+      totalDataChart: [[1707000000, 500000000], [1707100000, 600000000]],
     }),
   },
 }));
@@ -31,5 +32,9 @@ describe("GET /api/market/overview", () => {
     expect(data).toHaveProperty("topProtocols");
     expect(data.tvl).toHaveProperty("current");
     expect(data.tvl).toHaveProperty("history");
+    expect(data.volume.current).toBe(892000000);
+    expect(data.volume.history).toHaveLength(2);
+    expect(data.volume.history[0]).toHaveProperty("date");
+    expect(data.volume.history[0]).toHaveProperty("value");
   });
 });
