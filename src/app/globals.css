@@ -47,83 +47,161 @@
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
 
-  /* Obsidian Terminal custom colors */
-  --color-void: #000000;
-  --color-surface: #0A0A0A;
-  --color-elevated: #111111;
-  --color-overlay: #141414;
-  --color-amber: #E2A336;
-  --color-amber-dim: #C48A20;
-  --color-amber-glow: rgba(226, 163, 54, 0.15);
-  --color-amber-faint: rgba(226, 163, 54, 0.06);
-  --color-positive: #34D399;
-  --color-positive-dim: rgba(52, 211, 153, 0.12);
-  --color-negative: #F87171;
-  --color-negative-dim: rgba(248, 113, 113, 0.12);
-  --color-warm-white: #E8E4DD;
-  --color-warm-gray: #8A8580;
-  --color-warm-muted: #4A4744;
+  /* Design system custom colors */
+  --color-surface: var(--bg-surface);
+  --color-elevated: var(--bg-elevated);
+  --color-overlay: var(--bg-overlay);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-muted: var(--border-muted);
+  --color-accent-theme: var(--amber);
+  --color-accent-hover: var(--amber-dim);
+  --color-accent-faint: var(--amber-faint);
+  --color-accent-glow: var(--amber-glow);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-positive: var(--positive);
+  --color-positive-dim: var(--positive-dim);
+  --color-negative: var(--negative);
+  --color-negative-dim: var(--negative-dim);
 }
 
+/* Light mode (default) */
 :root {
-  /* All radii set to 0 for sharp corners */
-  --radius: 0rem;
+  --radius: 0.5rem;
 
-  /* Obsidian Terminal - always dark */
-  --background: #000000;
-  --foreground: #E8E4DD;
-  --card: #0A0A0A;
-  --card-foreground: #E8E4DD;
-  --popover: #111111;
-  --popover-foreground: #E8E4DD;
-  --primary: #E2A336;
-  --primary-foreground: #000000;
-  --secondary: #111111;
-  --secondary-foreground: #E8E4DD;
-  --muted: #141414;
-  --muted-foreground: #8A8580;
-  --accent: #111111;
-  --accent-foreground: #E8E4DD;
-  --destructive: #F87171;
-  --border: #1A1A1A;
-  --input: #1A1A1A;
-  --ring: #E2A336;
-  --chart-1: #E2A336;
-  --chart-2: #34D399;
-  --chart-3: #F87171;
-  --chart-4: #C48A20;
-  --chart-5: #8A8580;
-  --sidebar: #0A0A0A;
-  --sidebar-foreground: #E8E4DD;
-  --sidebar-primary: #E2A336;
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #111111;
-  --sidebar-accent-foreground: #E8E4DD;
-  --sidebar-border: #1A1A1A;
-  --sidebar-ring: #E2A336;
+  /* Surfaces — warm-tinted whites */
+  --background: hsl(40, 10%, 98%);
+  --foreground: hsl(30, 8%, 12%);
+  --bg-surface: hsl(40, 8%, 95%);
+  --bg-elevated: hsl(40, 8%, 92%);
+  --bg-overlay: hsl(40, 8%, 89%);
 
-  /* Obsidian Terminal design tokens */
-  --bg-void: #000000;
-  --bg-surface: #0A0A0A;
-  --bg-elevated: #111111;
-  --bg-overlay: #141414;
-  --border-subtle: #1A1A1A;
-  --border-muted: #252525;
-  --border-active: #E2A336;
-  --text-primary: #E8E4DD;
-  --text-secondary: #8A8580;
-  --text-muted: #4A4744;
-  --amber: #E2A336;
-  --amber-dim: #C48A20;
-  --amber-glow: rgba(226, 163, 54, 0.15);
-  --amber-faint: rgba(226, 163, 54, 0.06);
-  --positive: #34D399;
-  --positive-dim: rgba(52, 211, 153, 0.12);
-  --negative: #F87171;
-  --negative-dim: rgba(248, 113, 113, 0.12);
-  --chart-line: #E2A336;
-  --chart-fill: rgba(226, 163, 54, 0.08);
-  --chart-grid: #1A1A1A;
+  /* Text */
+  --text-primary: hsl(30, 8%, 12%);
+  --text-secondary: hsl(30, 5%, 42%);
+  --text-muted: hsl(30, 5%, 58%);
+
+  /* Borders */
+  --border-subtle: hsl(40, 8%, 88%);
+  --border-muted: hsl(40, 8%, 82%);
+
+  /* Accent — amber/gold (BNB Chain) */
+  --amber: hsl(38, 80%, 50%);
+  --amber-dim: hsl(38, 80%, 42%);
+  --amber-glow: hsla(38, 80%, 50%, 0.12);
+  --amber-faint: hsl(38, 80%, 96%);
+  --accent-contrast: hsl(0, 0%, 100%);
+
+  /* Semantic */
+  --positive: hsl(152, 69%, 40%);
+  --positive-dim: hsla(152, 69%, 40%, 0.1);
+  --negative: hsl(0, 72%, 51%);
+  --negative-dim: hsla(0, 72%, 51%, 0.1);
+
+  /* Charts */
+  --chart-line: hsl(38, 80%, 50%);
+  --chart-fill: hsla(38, 80%, 50%, 0.08);
+  --chart-grid: hsl(40, 8%, 88%);
+
+  /* shadcn-compatible */
+  --card: hsl(40, 8%, 95%);
+  --card-foreground: hsl(30, 8%, 12%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(30, 8%, 12%);
+  --primary: hsl(38, 80%, 50%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(40, 8%, 92%);
+  --secondary-foreground: hsl(30, 8%, 12%);
+  --muted: hsl(40, 8%, 92%);
+  --muted-foreground: hsl(30, 5%, 42%);
+  --accent: hsl(40, 8%, 92%);
+  --accent-foreground: hsl(30, 8%, 12%);
+  --destructive: hsl(0, 72%, 51%);
+  --border: hsl(40, 8%, 88%);
+  --input: hsl(40, 8%, 88%);
+  --ring: hsl(38, 80%, 50%);
+  --chart-1: hsl(38, 80%, 50%);
+  --chart-2: hsl(152, 69%, 40%);
+  --chart-3: hsl(0, 72%, 51%);
+  --chart-4: hsl(38, 80%, 42%);
+  --chart-5: hsl(30, 5%, 42%);
+  --sidebar: hsl(40, 8%, 95%);
+  --sidebar-foreground: hsl(30, 8%, 12%);
+  --sidebar-primary: hsl(38, 80%, 50%);
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(40, 8%, 92%);
+  --sidebar-accent-foreground: hsl(30, 8%, 12%);
+  --sidebar-border: hsl(40, 8%, 88%);
+  --sidebar-ring: hsl(38, 80%, 50%);
+}
+
+/* Dark mode */
+.dark {
+  --background: hsl(225, 15%, 10%);
+  --foreground: hsl(40, 10%, 93%);
+  --bg-surface: hsl(225, 14%, 13%);
+  --bg-elevated: hsl(225, 13%, 16%);
+  --bg-overlay: hsl(225, 13%, 19%);
+
+  /* Text */
+  --text-primary: hsl(40, 10%, 93%);
+  --text-secondary: hsl(40, 5%, 60%);
+  --text-muted: hsl(40, 5%, 42%);
+
+  /* Borders */
+  --border-subtle: hsl(225, 12%, 18%);
+  --border-muted: hsl(225, 12%, 24%);
+
+  /* Accent — amber/gold */
+  --amber: hsl(38, 80%, 55%);
+  --amber-dim: hsl(38, 80%, 62%);
+  --amber-glow: hsla(38, 80%, 50%, 0.15);
+  --amber-faint: hsla(38, 80%, 50%, 0.1);
+  --accent-contrast: hsl(225, 15%, 10%);
+
+  /* Semantic */
+  --positive: hsl(152, 69%, 55%);
+  --positive-dim: hsla(152, 69%, 55%, 0.12);
+  --negative: hsl(0, 84%, 65%);
+  --negative-dim: hsla(0, 84%, 65%, 0.12);
+
+  /* Charts */
+  --chart-line: hsl(38, 80%, 55%);
+  --chart-fill: hsla(38, 80%, 55%, 0.08);
+  --chart-grid: hsl(225, 12%, 18%);
+
+  /* shadcn-compatible */
+  --card: hsl(225, 14%, 13%);
+  --card-foreground: hsl(40, 10%, 93%);
+  --popover: hsl(225, 13%, 16%);
+  --popover-foreground: hsl(40, 10%, 93%);
+  --primary: hsl(38, 80%, 55%);
+  --primary-foreground: hsl(225, 15%, 10%);
+  --secondary: hsl(225, 13%, 16%);
+  --secondary-foreground: hsl(40, 10%, 93%);
+  --muted: hsl(225, 13%, 19%);
+  --muted-foreground: hsl(40, 5%, 60%);
+  --accent: hsl(225, 13%, 16%);
+  --accent-foreground: hsl(40, 10%, 93%);
+  --destructive: hsl(0, 84%, 65%);
+  --border: hsl(225, 12%, 18%);
+  --input: hsl(225, 12%, 18%);
+  --ring: hsl(38, 80%, 55%);
+  --chart-1: hsl(38, 80%, 55%);
+  --chart-2: hsl(152, 69%, 55%);
+  --chart-3: hsl(0, 84%, 65%);
+  --chart-4: hsl(38, 80%, 62%);
+  --chart-5: hsl(40, 5%, 60%);
+  --sidebar: hsl(225, 14%, 13%);
+  --sidebar-foreground: hsl(40, 10%, 93%);
+  --sidebar-primary: hsl(38, 80%, 55%);
+  --sidebar-primary-foreground: hsl(225, 15%, 10%);
+  --sidebar-accent: hsl(225, 13%, 16%);
+  --sidebar-accent-foreground: hsl(40, 10%, 93%);
+  --sidebar-border: hsl(225, 12%, 18%);
+  --sidebar-ring: hsl(38, 80%, 55%);
 }
 
 @layer base {
@@ -139,16 +217,6 @@
     to {
       stroke-dashoffset: 0;
     }
-  }
-
-  .noise-overlay::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    opacity: 0.03;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 1;
   }
 
   .tabular-nums {

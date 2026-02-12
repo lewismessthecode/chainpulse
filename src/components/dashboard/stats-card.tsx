@@ -32,25 +32,25 @@ function formatValue(value: number, prefix?: string, suffix?: string): string {
 export function StatsCard({ label, value, prefix, suffix, change, description }: StatsCardProps) {
   return (
     <motion.div
-      className="bg-surface border border-[#1A1A1A] p-5 hover:border-amber transition-colors duration-150"
+      className="bg-surface border border-border-subtle p-5 rounded-lg hover:border-accent-theme transition-colors duration-150"
       whileHover={{ y: -2 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
     >
-      <p className="text-[11px] uppercase tracking-[0.08em] text-warm-muted mb-3">
+      <p className="text-[11px] uppercase tracking-[0.08em] text-text-muted mb-3">
         {label}
         {description && (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <span
-                  className="inline-block ml-1.5 cursor-help text-warm-muted/60 hover:text-amber"
+                  className="inline-block ml-1.5 cursor-help text-text-muted/60 hover:text-accent-theme"
                   aria-label="Info"
                 >
                   {"\u2139"}
                 </span>
               </TooltipTrigger>
               <TooltipContent
-                className="bg-[#111] border border-amber/20 text-warm-muted text-xs px-3 py-2 max-w-[220px]"
+                className="bg-elevated border border-accent-theme/20 text-text-muted text-xs px-3 py-2 max-w-[220px]"
                 sideOffset={4}
               >
                 {description}
@@ -59,13 +59,13 @@ export function StatsCard({ label, value, prefix, suffix, change, description }:
           </TooltipProvider>
         )}
       </p>
-      <p className="text-4xl font-mono tabular-nums text-warm-white mb-2">
+      <p className="text-4xl font-mono tabular-nums text-text-primary mb-2">
         {formatValue(value, prefix, suffix)}
       </p>
       {change !== undefined && (
         <span
           className={`text-sm font-mono ${
-            change >= 0 ? "text-[#34D399]" : "text-[#F87171]"
+            change >= 0 ? "text-positive" : "text-negative"
           }`}
         >
           {change >= 0 ? "+" : ""}{change.toFixed(1)}%

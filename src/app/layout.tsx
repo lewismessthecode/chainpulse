@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { GeistSans } from "geist/font/sans";
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Sidebar } from "@/components/layout/sidebar";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { ErrorBoundary } from "@/components/shared/error-boundary";
@@ -45,28 +47,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${plusJakarta.variable} ${jetbrainsMono.variable} antialiased bg-void text-warm-white`}
+        className={`${plusJakarta.variable} ${jetbrainsMono.variable} ${GeistSans.variable} antialiased`}
         style={{
-          fontFamily: "var(--font-body)",
-          ["--font-display" as string]:
-            "'Instrument Serif', Georgia, serif",
+          ["--font-display" as string]: GeistSans.style.fontFamily,
         }}
       >
-        <Sidebar />
-        <main className="md:ml-14 min-h-screen p-4 md:p-6 pb-20 md:pb-6">
-          <ErrorBoundary>
-            {children}
-          </ErrorBoundary>
-        </main>
-        <MobileNav />
+        <ThemeProvider>
+          <Sidebar />
+          <main className="md:ml-14 min-h-screen p-4 md:p-6 pb-20 md:pb-6">
+            <ErrorBoundary>
+              {children}
+            </ErrorBoundary>
+          </main>
+          <MobileNav />
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -24,16 +24,13 @@ export function Header() {
   });
 
   return (
-    <header className="flex items-end justify-between pb-6 mb-6 border-b border-[#1A1A1A]">
-      <h1
-        className="text-3xl text-warm-white"
-        style={{ fontFamily: "var(--font-display)" }}
-      >
+    <header className="flex items-end justify-between pb-6 mb-6 border-b border-border-subtle">
+      <h1 className="text-3xl text-text-primary font-display">
         {title}
       </h1>
       <div className="flex items-center gap-3">
         <LiveIndicator />
-        <span className="text-xs text-warm-muted font-mono">{dateStr}</span>
+        <span className="text-xs text-text-muted font-mono">{dateStr}</span>
       </div>
     </header>
   );

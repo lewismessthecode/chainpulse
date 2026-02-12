@@ -82,7 +82,18 @@ All hooks import from `src/hooks/fetcher.ts` which throws on non-ok responses (s
 
 ## Design System
 
-"Obsidian Terminal" — pure black backgrounds (`#000`), amber accent (`#D4A017`), monospaced numerics (JetBrains Mono), sharp corners (no border-radius), ease-out animations only. Display font: Instrument Serif. Body font: Plus Jakarta Sans. Tailwind CSS 4 with custom theme tokens in `src/app/globals.css`.
+"Clean Data Studio" — modern, professional DeFi dashboard with light/dark mode support via `next-themes`.
+
+- **Theme**: System/light/dark toggle in sidebar. `attribute="class"` on `<html>`, `suppressHydrationWarning`.
+- **Light mode**: Warm-tinted whites (`hsl(40, 10%, 98%)` background), cool text (`hsl(30, 8%, 12%)`).
+- **Dark mode**: Rich dark grays (`hsl(225, 15%, 10%)` background, not pure black), warm light text (`hsl(40, 10%, 93%)`).
+- **Accent**: Amber/gold (BNB Chain brand) — `hsl(38, 80%, 50%)` light / `hsl(38, 80%, 55%)` dark.
+- **Semantic colors**: `--positive` (green), `--negative` (red), with `-dim` variants for backgrounds.
+- **Border radius**: `0.5rem` (8px) — modern rounded corners.
+- **Typography**: Geist (display/headings via `font-display` class), Plus Jakarta Sans (body), JetBrains Mono (data/mono).
+- **Animations**: ease-out only. Framer Motion for page transitions and hover effects.
+- **CSS tokens**: `bg-surface`, `bg-elevated`, `text-text-primary`, `text-text-secondary`, `text-text-muted`, `border-border-subtle`, `text-accent-theme`, `bg-accent-faint`, `text-positive`, `text-negative`. Defined in `src/app/globals.css`.
+- **Chart theming**: `useChartColors()` hook in `src/hooks/use-chart-colors.ts` returns light/dark Recharts color objects. Charts re-render on theme change via `key={colors.line}`.
 
 ## Environment Variables
 

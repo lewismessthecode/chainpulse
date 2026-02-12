@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { useVerify } from "@/hooks/use-verify";
+import { chainConfig } from "@/lib/blockchain/config";
 import type { AIInsight } from "@/lib/types";
 
 interface VerificationPanelProps {
@@ -31,9 +32,9 @@ export function VerificationPanel({ insight, isOpen }: VerificationPanelProps) {
     verify(insight.predictionId, content);
   };
 
-  const truncate = (hash: string) => hash.slice(0, 10) + "..." + hash.slice(-6);
+  const truncate = (hash: string) => hash ? hash.slice(0, 10) + "..." + hash.slice(-6) : "N/A";
   const bscScanUrl = insight.txHash
-    ? `https://testnet.bscscan.com/tx/${insight.txHash}`
+    ? `${chainConfig.explorerUrl}/tx/${insight.txHash}`
     : undefined;
 
   return (
@@ -46,20 +47,20 @@ export function VerificationPanel({ insight, isOpen }: VerificationPanelProps) {
           transition={{ duration: 0.2, ease: "easeOut" }}
           className="overflow-hidden"
         >
-          <div className="pt-4 mt-4 border-t border-[#1A1A1A]">
-            <p className="text-[10px] uppercase tracking-[0.1em] text-warm-muted font-mono mb-3">
+          <div className="pt-4 mt-4 border-t border-border-subtle">
+            <p className="text-[10px] uppercase tracking-[0.1em] text-text-muted font-mono mb-3">
               Onchain Verification
             </p>
 
             <div className="space-y-1.5 mb-4">
               <div className="flex items-center gap-2 text-xs font-mono">
-                <span className="text-warm-muted w-24">Local Hash:</span>
-                <span className="text-warm-gray">{truncate(insight.contentHash)}</span>
+                <span className="text-text-muted w-24">Local Hash:</span>
+                <span className="text-text-secondary">{truncate(insight.contentHash)}</span>
               </div>
               {insight.predictionId !== undefined && (
                 <div className="flex items-center gap-2 text-xs font-mono">
-                  <span className="text-warm-muted w-24">Prediction ID:</span>
-                  <span className="text-warm-gray">#{insight.predictionId}</span>
+                  <span className="text-text-muted w-24">Prediction ID:</span>
+                  <span className="text-text-secondary">#{insight.predictionId}</span>
                 </div>
               )}
             </div>
@@ -68,7 +69,7 @@ export function VerificationPanel({ insight, isOpen }: VerificationPanelProps) {
               <button
                 onClick={handleVerify}
                 disabled={isVerifying || insight.predictionId === undefined}
-                className="px-4 py-2 bg-amber-faint border border-amber text-amber text-xs font-mono uppercase tracking-wider hover:bg-[rgba(212,160,23,0.16)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-accent-faint border border-accent-theme text-accent-theme text-xs font-mono uppercase tracking-wider rounded-lg hover:bg-accent-glow transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {isVerifying ? (
                   <span className="inline-flex items-center gap-2">
@@ -88,12 +89,12 @@ export function VerificationPanel({ insight, isOpen }: VerificationPanelProps) {
                 className="space-y-2"
               >
                 {result.verified ? (
-                  <div className="flex items-center gap-2 text-emerald-400 text-xs font-mono">
+                  <div className="flex items-center gap-2 text-positive text-xs font-mono">
                     <CheckCircle2 className="w-4 h-4" />
                     VERIFIED — HASHES MATCH
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2 text-red-400 text-xs font-mono">
+                  <div className="flex items-center gap-2 text-negative text-xs font-mono">
                     <XCircle className="w-4 h-4" />
                     MISMATCH — CONTENT DIFFERS
                   </div>
@@ -103,7 +104,7 @@ export function VerificationPanel({ insight, isOpen }: VerificationPanelProps) {
                     href={bscScanUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-[10px] text-amber font-mono hover:text-amber-dim underline underline-offset-2 transition-colors"
+                    className="inline-flex items-center gap-1 text-[10px] text-accent-theme font-mono hover:text-accent-hover underline underline-offset-2 transition-colors"
                   >
                     View on BSCScan
                     <ArrowUpRight className="w-2.5 h-2.5" />
@@ -111,7 +112,7 @@ export function VerificationPanel({ insight, isOpen }: VerificationPanelProps) {
                 )}
                 <button
                   onClick={reset}
-                  className="block text-[10px] text-warm-muted font-mono hover:text-warm-gray transition-colors mt-1"
+                  className="block text-[10px] text-text-muted font-mono hover:text-text-secondary transition-colors mt-1"
                 >
                   Reset
                 </button>
@@ -124,10 +125,10 @@ export function VerificationPanel({ insight, isOpen }: VerificationPanelProps) {
                 animate={{ opacity: 1 }}
                 className="space-y-2"
               >
-                <p className="text-red-400 text-xs font-mono">{error}</p>
+                <p className="text-negative text-xs font-mono">{error}</p>
                 <button
                   onClick={reset}
-                  className="text-[10px] text-warm-muted font-mono hover:text-warm-gray transition-colors"
+                  className="text-[10px] text-text-muted font-mono hover:text-text-secondary transition-colors"
                 >
                   Try again
                 </button>

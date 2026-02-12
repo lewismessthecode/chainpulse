@@ -28,7 +28,7 @@ export function Sparkline({ data, width = 80, height = 24 }: SparklineProps) {
       <polyline
         points={points}
         fill="none"
-        stroke={isPositive ? "#34D399" : "#F87171"}
+        className={isPositive ? "stroke-positive" : "stroke-negative"}
         strokeWidth="1.5"
       />
     </svg>

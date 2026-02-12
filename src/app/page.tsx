@@ -30,7 +30,7 @@ export default function DashboardPage() {
         <HeroSection />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="bg-surface border border-[#1A1A1A] p-5 h-32 animate-pulse" />
+            <div key={i} className="bg-surface border border-border-subtle p-5 h-32 rounded-lg animate-pulse" />
           ))}
         </div>
       </div>

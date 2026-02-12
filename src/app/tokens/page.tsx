@@ -25,7 +25,7 @@ export default function TokensPage() {
       </FadeInItem>
       <FadeInItem>
         {isLoading ? (
-          <div className="bg-surface border border-[#1A1A1A] p-5 h-96 animate-pulse" />
+          <div className="bg-surface border border-border-subtle p-5 h-96 rounded-lg animate-pulse" />
         ) : (
           <TokenTable tokens={tokens} />
         )}

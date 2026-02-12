@@ -15,8 +15,12 @@ function getInsightsPath(): string {
 export async function GET(request: Request): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get("page") ?? "1", 10);
-    const limit = parseInt(searchParams.get("limit") ?? "10", 10);
+    const rawPage = parseInt(searchParams.get("page") ?? "1", 10);
+    const rawLimit = parseInt(searchParams.get("limit") ?? "10", 10);
+    const page = Number.isFinite(rawPage) && rawPage > 0 ? rawPage : 1;
+    const limit = Number.isFinite(rawLimit) && rawLimit > 0
+      ? Math.min(rawLimit, 100)
+      : 10;
     const category = searchParams.get("category");
 
     let insights: AIInsight[] = [];

@@ -46,13 +46,14 @@ export function InsightFeed({ insights }: InsightFeedProps) {
           <button
             key={cat}
             onClick={() => setCategory(cat)}
-            className={`px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] font-mono transition-colors duration-150 ${
+            aria-pressed={category === cat}
+            className={`px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] font-mono rounded-lg transition-colors duration-150 ${
               category === cat
-                ? "bg-amber text-black"
-                : "bg-elevated text-warm-muted hover:text-warm-gray border border-[#1A1A1A]"
+                ? "bg-accent-theme text-accent-contrast"
+                : "bg-elevated text-text-muted hover:text-text-secondary border border-border-subtle"
             }`}
           >
-            {cat.replace("_", " ")}
+            {cat.replaceAll("_", " ")}
           </button>
         ))}
       </div>
@@ -73,12 +74,12 @@ export function InsightFeed({ insights }: InsightFeedProps) {
 
       {filtered.length === 0 && (
         <div className="flex flex-col items-center justify-center py-16">
-          <Brain className="w-8 h-8 text-warm-muted/40 mb-3" />
-          <p className="text-warm-muted text-sm">
+          <Brain className="w-8 h-8 text-text-muted/40 mb-3" />
+          <p className="text-text-muted text-sm">
             No insights yet. AI analysis hasn&apos;t been triggered.
           </p>
-          <p className="text-warm-muted/60 text-xs mt-2">
-            Send a POST request to /api/ai/analyze to generate insights.
+          <p className="text-text-muted/60 text-xs mt-2">
+            Insights will appear here once the next analysis cycle completes.
           </p>
         </div>
       )}

@@ -104,7 +104,7 @@ const item = {
 export function BuildTimeline() {
   return (
     <div className="relative">
-      <div className="absolute left-[19px] top-0 bottom-0 w-px bg-[#1A1A1A]" />
+      <div className="absolute left-[19px] top-0 bottom-0 w-px bg-border-subtle" />
 
       <div className="space-y-8">
         {TIMELINE.map((entry, i) => (
@@ -113,35 +113,32 @@ export function BuildTimeline() {
             variants={item}
             className="relative pl-12"
           >
-            <div className="absolute left-0 top-0 w-10 h-10 bg-surface border border-[#1A1A1A] flex items-center justify-center text-amber z-10">
+            <div className="absolute left-0 top-0 w-10 h-10 bg-surface border border-border-subtle rounded-lg flex items-center justify-center text-accent-theme z-10">
               {entry.icon}
             </div>
 
-            <div className="bg-surface border border-[#1A1A1A] p-5 hover:border-amber transition-colors">
+            <div className="bg-surface border border-border-subtle p-5 rounded-lg hover:border-accent-theme transition-colors">
               <div className="flex items-center gap-3 mb-2">
-                <span className="px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] font-mono text-amber bg-amber-faint">
+                <span className="px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] font-mono text-accent-theme bg-accent-faint rounded">
                   {entry.phase}
                 </span>
-                <span className="text-[10px] font-mono text-warm-muted">
+                <span className="text-[10px] font-mono text-text-muted">
                   {entry.aiTool}
                 </span>
               </div>
 
-              <h3
-                className="text-lg text-warm-white mb-2"
-                style={{ fontFamily: "var(--font-display)" }}
-              >
+              <h3 className="text-lg text-text-primary mb-2 font-display">
                 {entry.title}
               </h3>
 
-              <p className="text-sm text-warm-gray leading-relaxed mb-3">
+              <p className="text-sm text-text-secondary leading-relaxed mb-3">
                 {entry.description}
               </p>
 
               <ul className="space-y-1">
                 {entry.details.map((detail, j) => (
-                  <li key={j} className="text-xs text-warm-muted font-mono flex items-start gap-2">
-                    <span className="text-amber mt-0.5">&#x2022;</span>
+                  <li key={j} className="text-xs text-text-muted font-mono flex items-start gap-2">
+                    <span className="text-accent-theme mt-0.5">&#x2022;</span>
                     {detail}
                   </li>
                 ))}

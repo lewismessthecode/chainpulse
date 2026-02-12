@@ -1,13 +1,20 @@
+import { timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 
 import { runAnalysis } from "@/lib/ai/analyzer";
+
+function safeCompare(a: string | undefined, b: string | undefined): boolean {
+  if (!a || !b || a.length !== b.length) return false;
+  return timingSafeEqual(Buffer.from(a), Buffer.from(b));
+}
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
     const authHeader = request.headers.get("authorization");
     const token = authHeader?.replace("Bearer ", "");
+    const cronSecret = process.env.CRON_SECRET;
 
-    if (token !== process.env.CRON_SECRET) {
+    if (!cronSecret || !safeCompare(token, cronSecret)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -32,8 +39,10 @@ export async function POST(request: Request): Promise<NextResponse> {
       insightCount: result.insights.length,
       txHash: result.txHash,
     });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Analysis failed";
-    return NextResponse.json({ error: message }, { status: 500 });
+  } catch {
+    return NextResponse.json(
+      { error: "Analysis failed. Please try again later." },
+      { status: 500 },
+    );
   }
 }

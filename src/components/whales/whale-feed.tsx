@@ -42,8 +42,8 @@ export function WhaleFeed({ alerts }: WhaleFeedProps) {
         </motion.div>
       ) : (
         <div className="flex flex-col items-center justify-center py-16">
-          <Fish className="w-8 h-8 text-warm-muted/40 mb-3" />
-          <p className="text-warm-muted text-sm">No whale alerts detected.</p>
+          <Fish className="w-8 h-8 text-text-muted/40 mb-3" />
+          <p className="text-text-muted text-sm">No whale alerts detected.</p>
         </div>
       )}
     </div>

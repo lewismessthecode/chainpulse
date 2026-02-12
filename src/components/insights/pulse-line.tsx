@@ -4,7 +4,7 @@ export function PulseLine({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 120 24"
-      className={`text-amber ${className ?? ""}`}
+      className={`text-accent-theme ${className ?? ""}`}
       fill="none"
       stroke="currentColor"
       strokeWidth="1.5"

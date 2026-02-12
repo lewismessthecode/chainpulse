@@ -29,7 +29,7 @@ export default function InsightsPage() {
             {Array.from({ length: 3 }).map((_, i) => (
               <div
                 key={i}
-                className="bg-surface border border-[#1A1A1A] p-5 h-48 animate-pulse"
+                className="bg-surface border border-border-subtle p-5 h-48 rounded-lg animate-pulse"
               />
             ))}
           </div>

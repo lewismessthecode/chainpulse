@@ -27,7 +27,7 @@ export default function WhalesPage() {
         {isLoading ? (
           <div className="space-y-3">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="bg-surface border border-[#1A1A1A] p-4 h-28 animate-pulse" />
+              <div key={i} className="bg-surface border border-border-subtle p-4 h-28 rounded-lg animate-pulse" />
             ))}
           </div>
         ) : (

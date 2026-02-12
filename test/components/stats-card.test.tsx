@@ -11,13 +11,13 @@ describe("StatsCard", () => {
   it("shows positive change in green", () => {
     render(<StatsCard label="TVL" value={100} change={2.4} />);
     const change = screen.getByText(/2.4%/);
-    expect(change.className).toContain("text-[#34D399]");
+    expect(change.className).toContain("text-positive");
   });
 
   it("shows negative change in red", () => {
     render(<StatsCard label="TVL" value={100} change={-1.2} />);
     const change = screen.getByText(/1.2%/);
-    expect(change.className).toContain("text-[#F87171]");
+    expect(change.className).toContain("text-negative");
   });
 
   it("renders info icon when description is provided", () => {

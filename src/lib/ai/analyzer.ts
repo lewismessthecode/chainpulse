@@ -43,19 +43,9 @@ export async function runAnalysis(marketData: {
 
   const contract = getWriteContract();
 
-  const hashes: string[] = [];
-  const categories: number[] = [];
-  const sentiments: number[] = [];
-  const summaries: string[] = [];
-
   const insights: AIInsight[] = parsed.insights.map((insight, i) => {
     const contentJson = JSON.stringify(insight);
     const contentHash = ethers.keccak256(ethers.toUtf8Bytes(contentJson));
-
-    hashes.push(contentHash);
-    categories.push(CATEGORY_MAP[insight.category]);
-    sentiments.push(insight.sentimentScore);
-    summaries.push(insight.summary);
 
     return {
       id: `${Date.now()}-${i}`,
@@ -64,6 +54,17 @@ export async function runAnalysis(marketData: {
       createdAt: new Date().toISOString(),
     };
   });
+
+  const hashes = insights.map((ins) => ins.contentHash);
+  const categories = insights.map((ins) => {
+    const idx = CATEGORY_MAP[ins.category];
+    if (idx === undefined) {
+      throw new Error(`Unknown category from AI: ${ins.category}`);
+    }
+    return idx;
+  });
+  const sentiments = insights.map((ins) => ins.sentimentScore);
+  const summaries = insights.map((ins) => ins.summary);
 
   const tx = await contract.storePredictionBatch(hashes, categories, sentiments, summaries);
   const receipt = await tx.wait();

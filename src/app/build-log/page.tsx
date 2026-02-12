@@ -13,7 +13,7 @@ export default function BuildLogPage() {
 
       <FadeInItem>
         <div className="mb-8">
-          <p className="text-sm text-warm-gray leading-relaxed max-w-2xl">
+          <p className="text-sm text-text-secondary leading-relaxed max-w-2xl">
             ChainPulse was built entirely with Claude Code (Opus) using an agent-driven workflow.
             Every phase — from architecture to smart contract to AI integration — was
             designed, implemented, tested, and reviewed by AI agents.
