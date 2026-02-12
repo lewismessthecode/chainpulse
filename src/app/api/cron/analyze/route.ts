@@ -1,9 +1,11 @@
-import { timingSafeEqual } from "node:crypto";
+import { createHash, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 
 function safeCompare(a: string | undefined, b: string | undefined): boolean {
-  if (!a || !b || a.length !== b.length) return false;
-  return timingSafeEqual(Buffer.from(a), Buffer.from(b));
+  if (!a || !b) return false;
+  const hashA = createHash("sha256").update(a).digest();
+  const hashB = createHash("sha256").update(b).digest();
+  return timingSafeEqual(hashA, hashB);
 }
 
 export async function GET(request: Request): Promise<NextResponse> {
@@ -16,7 +18,12 @@ export async function GET(request: Request): Promise<NextResponse> {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/ai/analyze`, {
+    const appUrl = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL;
+    if (!appUrl) {
+      return NextResponse.json({ error: "APP_URL not configured" }, { status: 500 });
+    }
+
+    const res = await fetch(`${appUrl}/api/ai/analyze`, {
       method: "POST",
       headers: { Authorization: `Bearer ${process.env.CRON_SECRET}` },
     });

@@ -18,6 +18,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "https://chainpulse.vercel.app"
+  ),
   title: "ChainPulse — BNB Chain Intelligence",
   description:
     "AI-powered onchain market intelligence dashboard for BNB Chain DeFi",

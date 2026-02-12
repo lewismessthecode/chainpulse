@@ -73,13 +73,26 @@ function mapTransfer(t: MoralisTransfer): TokenTransfer {
   };
 }
 
+const ETH_ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
+
+function validateAddress(address: string): string {
+  if (!ETH_ADDRESS_RE.test(address)) {
+    throw new Error(`Invalid Ethereum address: ${address.slice(0, 20)}`);
+  }
+  return address.toLowerCase();
+}
+
 export class MoralisClient {
   private apiKey: string;
   private lastRequest = 0;
   private minInterval = 40; // ~25 req/sec (50 CU each, 40k CU/day)
 
   constructor(apiKey?: string) {
-    this.apiKey = apiKey || process.env.MORALIS_API_KEY || "";
+    const key = apiKey || process.env.MORALIS_API_KEY;
+    if (!key) {
+      throw new Error("MORALIS_API_KEY not configured");
+    }
+    this.apiKey = key;
   }
 
   private async apiFetch<T>(url: string): Promise<T> {
@@ -112,16 +125,25 @@ export class MoralisClient {
     address: string,
     limit: number = 50
   ): Promise<TokenTransfer[]> {
-    const url = `${BASE_URL}/${address}/erc20/transfers?chain=bsc&limit=${limit}`;
+    const validAddress = validateAddress(address);
+    const url = `${BASE_URL}/${validAddress}/erc20/transfers?chain=bsc&limit=${limit}`;
     const data = await this.apiFetch<MoralisResponse>(url);
     return data.result.map(mapTransfer);
   }
 
   async getTokenPrice(tokenAddress: string): Promise<number> {
-    const url = `${BASE_URL}/erc20/${tokenAddress}/price?chain=bsc`;
+    const validAddress = validateAddress(tokenAddress);
+    const url = `${BASE_URL}/erc20/${validAddress}/price?chain=bsc`;
     const data = await this.apiFetch<MoralisPriceResponse>(url);
     return data.usdPrice;
   }
 }
 
-export const moralis = new MoralisClient();
+let _moralis: MoralisClient | null = null;
+
+export function getMoralisClient(): MoralisClient {
+  if (!_moralis) {
+    _moralis = new MoralisClient();
+  }
+  return _moralis;
+}

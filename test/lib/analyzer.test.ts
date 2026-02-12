@@ -50,6 +50,8 @@ describe("runAnalysis", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.resetModules();
+    process.env.GEMINI_API_KEY = "test-key";
   });
 
   it("should return insights and transaction hash", async () => {

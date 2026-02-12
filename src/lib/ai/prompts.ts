@@ -1,5 +1,19 @@
 import type { MarketOverview, TokenData, WhaleAlert } from "@/lib/types";
 
+/**
+ * Sanitize external string data before interpolation into AI prompts.
+ * Strips control characters, braces (to prevent JSON injection), and
+ * instruction-like patterns that could hijack the prompt.
+ */
+function sanitizeForPrompt(input: string, maxLength = 100): string {
+  return input
+    .replace(/[\x00-\x1F\x7F]/g, "")
+    .replace(/[{}[\]]/g, "")
+    .replace(/\b(ignore|forget|disregard|override|system|instruction)\b/gi, "")
+    .slice(0, maxLength)
+    .trim();
+}
+
 export const SYSTEM_INSTRUCTION = `You are ChainPulse, an autonomous AI market intelligence agent specialized in BNB Chain (BSC) DeFi analysis.
 
 ## Your Role
@@ -38,16 +52,18 @@ export function buildAnalysisPrompt(data: {
   const protocolLines = data.overview.topProtocols
     .slice(0, 10)
     .map((p) => {
+      const name = sanitizeForPrompt(p.name, 50);
       const sign = p.change24h > 0 ? "+" : "";
-      return `- ${p.name}: $${(p.tvl / 1e9).toFixed(2)}B (${sign}${p.change24h.toFixed(1)}%)`;
+      return `- ${name}: $${(p.tvl / 1e9).toFixed(2)}B (${sign}${p.change24h.toFixed(1)}%)`;
     })
     .join("\n");
 
   const tokenLines = data.tokens
     .slice(0, 10)
     .map((t) => {
+      const symbol = sanitizeForPrompt(t.symbol, 20);
       const sign = t.priceChange24h > 0 ? "+" : "";
-      return `- ${t.symbol}: $${t.price.toFixed(4)} (${sign}${t.priceChange24h.toFixed(1)}%) Vol: $${(t.volume24h / 1e6).toFixed(1)}M`;
+      return `- ${symbol}: $${t.price.toFixed(4)} (${sign}${t.priceChange24h.toFixed(1)}%) Vol: $${(t.volume24h / 1e6).toFixed(1)}M`;
     })
     .join("\n");
 
@@ -55,9 +71,10 @@ export function buildAnalysisPrompt(data: {
     .slice(0, 5)
     .map((w) => {
       const usd = w.usdValue != null ? `$${w.usdValue.toLocaleString("en-US", { maximumFractionDigits: 0 })}` : "unknown";
-      const fromLabel = w.fromLabel ?? `${w.from.slice(0, 8)}...`;
-      const toLabel = w.toLabel ?? `${w.to.slice(0, 8)}...`;
-      return `- ${w.type}: ${usd} (${w.value.toLocaleString()} ${w.tokenSymbol}) from ${fromLabel} to ${toLabel}`;
+      const fromLabel = sanitizeForPrompt(w.fromLabel ?? `${w.from.slice(0, 8)}...`, 40);
+      const toLabel = sanitizeForPrompt(w.toLabel ?? `${w.to.slice(0, 8)}...`, 40);
+      const tokenSymbol = sanitizeForPrompt(w.tokenSymbol, 20);
+      return `- ${sanitizeForPrompt(w.type, 20)}: ${usd} (${w.value.toLocaleString()} ${tokenSymbol}) from ${fromLabel} to ${toLabel}`;
     })
     .join("\n");
 

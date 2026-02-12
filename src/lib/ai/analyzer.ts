@@ -26,7 +26,11 @@ export async function runAnalysis(marketData: {
 }): Promise<{ insights: AIInsight[]; txHash: string }> {
   const prompt = buildAnalysisPrompt(marketData);
 
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY ?? "");
+  const geminiKey = process.env.GEMINI_API_KEY;
+  if (!geminiKey) {
+    throw new Error("GEMINI_API_KEY environment variable is not configured");
+  }
+  const genAI = new GoogleGenerativeAI(geminiKey);
   const model = genAI.getGenerativeModel({
     model: "gemini-2.0-flash",
     systemInstruction: SYSTEM_INSTRUCTION,
@@ -82,21 +86,26 @@ export async function runAnalysis(marketData: {
   return { insights: insightsWithTx, txHash: receipt.hash };
 }
 
+const MAX_STORED_INSIGHTS = 500;
+
 function loadInsights(): AIInsight[] {
-  if (existsSync(INSIGHTS_PATH)) {
-    return JSON.parse(readFileSync(INSIGHTS_PATH, "utf-8"));
-  }
-  const bundled = path.join(process.cwd(), "data", "insights.json");
-  if (existsSync(bundled)) {
-    return JSON.parse(readFileSync(bundled, "utf-8"));
+  for (const filePath of [INSIGHTS_PATH, path.join(process.cwd(), "data", "insights.json")]) {
+    if (existsSync(filePath)) {
+      try {
+        return JSON.parse(readFileSync(filePath, "utf-8"));
+      } catch {
+        // File corrupted — skip to next or return empty
+      }
+    }
   }
   return [];
 }
 
 function saveInsights(insights: AIInsight[]): void {
+  const trimmed = insights.slice(0, MAX_STORED_INSIGHTS);
   const dir = path.dirname(INSIGHTS_PATH);
   if (!existsSync(dir)) {
     mkdirSync(dir, { recursive: true });
   }
-  writeFileSync(INSIGHTS_PATH, JSON.stringify(insights, null, 2));
+  writeFileSync(INSIGHTS_PATH, JSON.stringify(trimmed, null, 2));
 }

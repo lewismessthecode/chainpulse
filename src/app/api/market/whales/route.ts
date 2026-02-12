@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { moralis } from "@/lib/data-sources/moralis";
+import { getMoralisClient } from "@/lib/data-sources/moralis";
 import { cache } from "@/lib/cache";
 import { CACHE_TTL, WHALE_MIN_VALUE_USD } from "@/lib/constants";
 import type { WhaleAlert } from "@/lib/types";
@@ -16,7 +16,7 @@ async function fetchPriceMap(tokenAddresses: string[]): Promise<Map<string, numb
   const results = await Promise.all(
     tokenAddresses.map(async (addr) => {
       try {
-        const price = await moralis.getTokenPrice(addr);
+        const price = await getMoralisClient().getTokenPrice(addr);
         return { addr, price };
       } catch {
         return { addr, price: 0 };
@@ -37,7 +37,7 @@ export async function GET(): Promise<NextResponse> {
     const transfersByAddress = await Promise.all(
       WATCHED_ADDRESSES.map(async ({ address, limit }) => {
         try {
-          return await moralis.getTokenTransfers(address, limit);
+          return await getMoralisClient().getTokenTransfers(address, limit);
         } catch {
           return [];
         }

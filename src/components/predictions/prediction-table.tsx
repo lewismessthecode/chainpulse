@@ -25,22 +25,22 @@ export function PredictionTable({ predictions }: PredictionTableProps) {
       <table className="w-full">
         <thead>
           <tr className="border-b border-border-subtle">
-            <th className="text-left text-[11px] uppercase tracking-[0.08em] text-text-muted p-4">
+            <th scope="col" className="text-left text-[11px] uppercase tracking-[0.08em] text-text-muted p-4">
               ID
             </th>
-            <th className="text-left text-[11px] uppercase tracking-[0.08em] text-text-muted p-4">
+            <th scope="col" className="text-left text-[11px] uppercase tracking-[0.08em] text-text-muted p-4">
               DATE
             </th>
-            <th className="text-left text-[11px] uppercase tracking-[0.08em] text-text-muted p-4">
+            <th scope="col" className="text-left text-[11px] uppercase tracking-[0.08em] text-text-muted p-4">
               CATEGORY
             </th>
-            <th className="text-left text-[11px] uppercase tracking-[0.08em] text-text-muted p-4">
+            <th scope="col" className="text-left text-[11px] uppercase tracking-[0.08em] text-text-muted p-4">
               SENTIMENT
             </th>
-            <th className="text-left text-[11px] uppercase tracking-[0.08em] text-text-muted p-4">
+            <th scope="col" className="text-left text-[11px] uppercase tracking-[0.08em] text-text-muted p-4">
               SUMMARY
             </th>
-            <th className="text-left text-[11px] uppercase tracking-[0.08em] text-text-muted p-4">
+            <th scope="col" className="text-left text-[11px] uppercase tracking-[0.08em] text-text-muted p-4">
               HASH
             </th>
           </tr>

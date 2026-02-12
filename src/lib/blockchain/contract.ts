@@ -1,3 +1,5 @@
+import "server-only";
+
 import { ethers } from "ethers";
 import { chainConfig } from "./config";
 import { abi } from "./abi";

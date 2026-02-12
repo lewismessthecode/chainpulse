@@ -4,11 +4,19 @@ import { MoralisClient } from "@/lib/data-sources/moralis";
 const mockFetch = vi.fn();
 vi.stubGlobal("fetch", mockFetch);
 
+const ADDR_A = "0x1111111111111111111111111111111111111111";
+const ADDR_B = "0x2222222222222222222222222222222222222222";
+const ADDR_C = "0x3333333333333333333333333333333333333333";
+const ADDR_D = "0x4444444444444444444444444444444444444444";
+const TOKEN_ADDR = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+const BUSD_ADDR = "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
+const USDT_ADDR = "0xcccccccccccccccccccccccccccccccccccccccc";
+
 function makeMoralisTransfer(overrides: Record<string, unknown> = {}) {
   return {
     transaction_hash: "0xabc123",
-    from_address: "0x111",
-    to_address: "0x222",
+    from_address: ADDR_A,
+    to_address: ADDR_B,
     value: "5000000000000000000",
     token_name: "PancakeSwap Token",
     token_symbol: "CAKE",
@@ -19,7 +27,7 @@ function makeMoralisTransfer(overrides: Record<string, unknown> = {}) {
     security_score: 92,
     from_address_entity: "Binance",
     to_address_entity: null,
-    address: "0xTokenAddr",
+    address: TOKEN_ADDR,
     ...overrides,
   };
 }
@@ -43,11 +51,11 @@ describe("MoralisClient", () => {
         }),
     });
 
-    const result = await client.getTokenTransfers("0x111", 10);
+    const result = await client.getTokenTransfers(ADDR_A, 10);
 
     expect(mockFetch).toHaveBeenCalledWith(
       expect.stringContaining(
-        "deep-index.moralis.io/api/v2.2/0x111/erc20/transfers?chain=bsc&limit=10"
+        `deep-index.moralis.io/api/v2.2/${ADDR_A.toLowerCase()}/erc20/transfers?chain=bsc&limit=10`
       ),
       expect.objectContaining({
         headers: {
@@ -67,8 +75,8 @@ describe("MoralisClient", () => {
           result: [
             makeMoralisTransfer({
               transaction_hash: "0xdef456",
-              from_address: "0x333",
-              to_address: "0x444",
+              from_address: ADDR_C,
+              to_address: ADDR_D,
               value: "100000000000000000000",
               token_name: "BUSD Token",
               token_symbol: "BUSD",
@@ -78,7 +86,7 @@ describe("MoralisClient", () => {
               security_score: 95,
               from_address_entity: "Binance",
               to_address_entity: "PancakeSwap",
-              address: "0xBUSDAddr",
+              address: BUSD_ADDR,
             }),
           ],
           page: 0,
@@ -86,12 +94,12 @@ describe("MoralisClient", () => {
         }),
     });
 
-    const result = await client.getTokenTransfers("0x333");
+    const result = await client.getTokenTransfers(ADDR_C);
 
     expect(result[0]).toEqual({
       hash: "0xdef456",
-      from: "0x333",
-      to: "0x444",
+      from: ADDR_C,
+      to: ADDR_D,
       value: "100000000000000000000",
       tokenName: "BUSD Token",
       tokenSymbol: "BUSD",
@@ -104,7 +112,7 @@ describe("MoralisClient", () => {
       securityScore: 95,
       fromEntity: "Binance",
       toEntity: "PancakeSwap",
-      tokenAddress: "0xBUSDAddr",
+      tokenAddress: BUSD_ADDR,
     });
   });
 
@@ -114,7 +122,7 @@ describe("MoralisClient", () => {
       status: 401,
     });
 
-    await expect(client.getTokenTransfers("0x111", 10)).rejects.toThrow(
+    await expect(client.getTokenTransfers(ADDR_A, 10)).rejects.toThrow(
       "Moralis API HTTP error: 401"
     );
   });
@@ -130,7 +138,7 @@ describe("MoralisClient", () => {
         }),
     });
 
-    const result = await client.getTokenTransfers("0x111", 10);
+    const result = await client.getTokenTransfers(ADDR_A, 10);
     expect(result).toEqual([]);
   });
 
@@ -142,8 +150,8 @@ describe("MoralisClient", () => {
           result: [
             {
               transaction_hash: "0xmin",
-              from_address: "0xA",
-              to_address: "0xB",
+              from_address: ADDR_A,
+              to_address: ADDR_B,
               value: "1000",
               token_name: "Unknown",
               token_symbol: "UNK",
@@ -156,7 +164,7 @@ describe("MoralisClient", () => {
         }),
     });
 
-    const result = await client.getTokenTransfers("0xA");
+    const result = await client.getTokenTransfers(ADDR_A);
 
     expect(result[0].possibleSpam).toBe(false);
     expect(result[0].securityScore).toBe(0);
@@ -164,6 +172,12 @@ describe("MoralisClient", () => {
     expect(result[0].toEntity).toBeNull();
     expect(result[0].tokenAddress).toBe("");
     expect(result[0].valueDecimal).toBe(0);
+  });
+
+  it("should reject invalid addresses", async () => {
+    await expect(client.getTokenTransfers("bad-address")).rejects.toThrow(
+      "Invalid Ethereum address"
+    );
   });
 
   describe("getTokenPrice", () => {
@@ -177,11 +191,11 @@ describe("MoralisClient", () => {
           }),
       });
 
-      const price = await client.getTokenPrice("0xUSDTAddr");
+      const price = await client.getTokenPrice(USDT_ADDR);
 
       expect(mockFetch).toHaveBeenCalledWith(
         expect.stringContaining(
-          "deep-index.moralis.io/api/v2.2/erc20/0xUSDTAddr/price?chain=bsc"
+          `deep-index.moralis.io/api/v2.2/erc20/${USDT_ADDR.toLowerCase()}/price?chain=bsc`
         ),
         expect.objectContaining({
           headers: {
@@ -199,8 +213,14 @@ describe("MoralisClient", () => {
         status: 404,
       });
 
-      await expect(client.getTokenPrice("0xBadToken")).rejects.toThrow(
+      await expect(client.getTokenPrice(USDT_ADDR)).rejects.toThrow(
         "Moralis API HTTP error: 404"
+      );
+    });
+
+    it("should reject invalid token addresses", async () => {
+      await expect(client.getTokenPrice("0xBadToken")).rejects.toThrow(
+        "Invalid Ethereum address"
       );
     });
   });

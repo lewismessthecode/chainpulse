@@ -6,7 +6,8 @@ export async function register() {
     try {
       const { setGlobalDispatcher, EnvHttpProxyAgent } = await import("undici");
       setGlobalDispatcher(new EnvHttpProxyAgent());
-      console.log(`[proxy] server-side fetch via ${proxy} (NO_PROXY respected)`);
+      const proxyUrl = new URL(proxy);
+      console.log(`[proxy] server-side fetch via ${proxyUrl.hostname}:${proxyUrl.port} (NO_PROXY respected)`);
     } catch (err) {
       console.warn("[proxy] Failed to set up proxy agent:", err);
     }

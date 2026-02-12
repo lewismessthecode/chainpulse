@@ -1,0 +1,58 @@
+[
+  {
+    "id": "1770787203494-0",
+    "category": "RISK",
+    "title": "Extreme Volatility and Potential Rug-Pulls in Emerging Tokens",
+    "summary": "High-volume tokens like ESP and ELON show extreme price manipulation, while CZ has crashed 99.9%, signaling a high-risk environment for retail traders.",
+    "fullAnalysis": "The current BSC market is experiencing an influx of hyper-volatile trading activity. Tokens such as ESP and ELON are reporting astronomical percentage gains (up to 16 trillion percent) alongside massive trading volumes exceeding $500M. This often indicates low liquidity depth where small trades trigger massive price swings, or coordinated wash trading to attract liquidity.\n\nSimultaneously, the 99.9% collapse of the 'CZ' token and the 100% drops in secondary ESP and '六大门派' listings serve as a stark warning of rug-pulls and exit scams. Investors should remain extremely cautious as the top volume generators currently consist almost entirely of high-risk speculative assets rather than established DeFi utility tokens.",
+    "sentimentScore": -65,
+    "confidence": 95,
+    "dataPoints": [
+      "ESP +142324.2% ($873.7M Vol)",
+      "CZ -99.9%",
+      "ELON +16751826458748.1% ($522.2M Vol)",
+      "六大门派围攻光明顶 -100.0%"
+    ],
+    "contentHash": "0x9d3ee10b36a7d8af2df2f555b6b5330053d73d0664e89e2c120079cc0767aabd",
+    "createdAt": "2026-02-11T05:20:03.494Z",
+    "txHash": "0x11413f4672f8bf2e97f36fbf53e20d2305f99b5c9b2d444e435a4b4280f2970d",
+    "predictionId": 0
+  },
+  {
+    "id": "1770787203495-1",
+    "category": "WHALE_ALERT",
+    "title": "Significant USDT Outflow from Binance to Private Wallet",
+    "summary": "A massive transfer of $288.1M USDT from Binance to wallet 0xf97781... suggests a major shift toward on-chain liquidity or private OTC settlement.",
+    "fullAnalysis": "A single whale entity (address 0xf97781...) has moved over $288M USDT out of Binance within the last 24 hours. This specific wallet is also consolidating other assets including BANK ($3.1M) and PROVE ($1.1M). Large stablecoin outflows from exchanges generally reduce immediate selling pressure on the exchange and can signal an intent to deploy capital into DeFi yield protocols or make large-scale ecosystem investments.\n\nHowever, the same address has been seen moving smaller amounts of ZKP and AT back into Binance, indicating active portfolio rebalancing. This whale's behavior is currently the primary driver of liquidity movement on the chain, and their subsequent actions should be monitored for signs of sector-specific accumulation.",
+    "sentimentScore": 45,
+    "confidence": 88,
+    "dataPoints": [
+      "$288,113,950 USDT transfer from Binance",
+      "3,519,805 PROVE transfer from Binance",
+      "108,238,124 BANK transfer from Binance"
+    ],
+    "contentHash": "0x7a4e70ad697c4d3e240cfd58ebdc390196fb63c983308d442bf0c42fbe70cd71",
+    "createdAt": "2026-02-11T05:20:03.495Z",
+    "txHash": "0x11413f4672f8bf2e97f36fbf53e20d2305f99b5c9b2d444e435a4b4280f2970d",
+    "predictionId": 1
+  },
+  {
+    "id": "1770787203495-2",
+    "category": "MARKET_INSIGHT",
+    "title": "Stagnant TVL Growth Despite Robust DEX Trading Volume",
+    "summary": "BNB Chain TVL contracted by 1.5% to $5.45B, showing a decoupling between high-frequency trading volume and long-term capital retention.",
+    "fullAnalysis": "While the 24-hour DEX volume remains robust at $1.22B, the Total Value Locked (TVL) across the ecosystem has seen a slight decline. Major protocols, including Binance CEX and Aave V3, have experienced TVL drops between 2% and 3.2%. This suggests that the current market activity is dominated by short-term speculators and high-velocity trading rather than a sustained influx of new capital.\n\nThe decline in staked ETH values and broader protocol TVL reflects a cautious sentiment among large-scale liquidity providers. For a sustained bullish trend, the ecosystem needs to see a reversal in the TVL downtrend to demonstrate that the massive trading volumes are converting into long-term network participation.",
+    "sentimentScore": -20,
+    "confidence": 82,
+    "dataPoints": [
+      "Total Value Locked: $5.45B (-1.5%)",
+      "Binance CEX TVL: -3.2%",
+      "DEX Volume: $1224M",
+      "Aave V3 TVL: -2.0%"
+    ],
+    "contentHash": "0x120904dbe088928bd50759bcdc3abdd84fbbc5286348e36d546a2bea1a3fab87",
+    "createdAt": "2026-02-11T05:20:03.495Z",
+    "txHash": "0x11413f4672f8bf2e97f36fbf53e20d2305f99b5c9b2d444e435a4b4280f2970d",
+    "predictionId": 2
+  }
+]

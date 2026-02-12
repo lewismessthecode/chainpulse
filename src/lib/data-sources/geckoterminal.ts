@@ -52,6 +52,15 @@ function mapPoolData(pool: PoolData): Pool {
   };
 }
 
+const ETH_ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
+
+function validateAddress(address: string): string {
+  if (!ETH_ADDRESS_RE.test(address)) {
+    throw new Error(`Invalid address: ${address.slice(0, 20)}`);
+  }
+  return address.toLowerCase();
+}
+
 export class GeckoTerminalClient {
   private queue: Array<() => void> = [];
   private processing = false;
@@ -133,10 +142,11 @@ export class GeckoTerminalClient {
 
   async getPoolOhlcv(poolAddress: string): Promise<number[]> {
     try {
+      const validAddress = validateAddress(poolAddress);
       const data = await this.rateLimitedFetch<{
         data: { attributes: { ohlcv_list: number[][] } };
       }>(
-        `/networks/${NETWORK}/pools/${poolAddress}/ohlcv/hour?aggregate=1&limit=24`
+        `/networks/${NETWORK}/pools/${validAddress}/ohlcv/hour?aggregate=1&limit=24`
       );
       return data.data.attributes.ohlcv_list.map((candle) => candle[4]);
     } catch {
@@ -145,9 +155,10 @@ export class GeckoTerminalClient {
   }
 
   async getTokenInfo(address: string): Promise<TokenInfo> {
+    const validAddress = validateAddress(address);
     const data = await this.rateLimitedFetch<{
       data: { id: string; attributes: TokenAttributes };
-    }>(`/networks/${NETWORK}/tokens/${address}`);
+    }>(`/networks/${NETWORK}/tokens/${validAddress}`);
 
     return {
       name: data.data.attributes.name,

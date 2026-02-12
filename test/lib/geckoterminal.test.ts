@@ -4,6 +4,9 @@ import { GeckoTerminalClient } from "@/lib/data-sources/geckoterminal";
 const mockFetch = vi.fn();
 vi.stubGlobal("fetch", mockFetch);
 
+const POOL_ADDR = "0x1111111111111111111111111111111111111111";
+const TOKEN_ADDR = "0x2222222222222222222222222222222222222222";
+
 describe("GeckoTerminalClient", () => {
   let client: GeckoTerminalClient;
 
@@ -74,7 +77,7 @@ describe("GeckoTerminalClient", () => {
       json: () =>
         Promise.resolve({
           data: {
-            id: "bsc_0x789",
+            id: `bsc_${TOKEN_ADDR}`,
             attributes: {
               name: "PancakeSwap Token",
               symbol: "CAKE",
@@ -85,7 +88,7 @@ describe("GeckoTerminalClient", () => {
         }),
     });
 
-    const result = await client.getTokenInfo("0x789");
+    const result = await client.getTokenInfo(TOKEN_ADDR);
     expect(result.name).toBe("PancakeSwap Token");
     expect(result.symbol).toBe("CAKE");
   });
@@ -106,10 +109,10 @@ describe("GeckoTerminalClient", () => {
         }),
     });
 
-    const result = await client.getPoolOhlcv("0x123");
+    const result = await client.getPoolOhlcv(POOL_ADDR);
     expect(result).toEqual([2.45, 2.50]);
     expect(mockFetch).toHaveBeenCalledWith(
-      expect.stringContaining("pools/0x123/ohlcv/hour"),
+      expect.stringContaining(`pools/${POOL_ADDR.toLowerCase()}/ohlcv/hour`),
       expect.any(Object)
     );
   });
@@ -117,12 +120,23 @@ describe("GeckoTerminalClient", () => {
   it("should return empty array on OHLCV fetch failure", async () => {
     mockFetch.mockResolvedValueOnce({ ok: false, status: 429 });
 
-    const result = await client.getPoolOhlcv("0x123");
+    const result = await client.getPoolOhlcv(POOL_ADDR);
     expect(result).toEqual([]);
   });
 
   it("should throw on API errors", async () => {
     mockFetch.mockResolvedValueOnce({ ok: false, status: 429 });
     await expect(client.getTrendingPools()).rejects.toThrow();
+  });
+
+  it("should reject invalid addresses for getTokenInfo", async () => {
+    await expect(client.getTokenInfo("bad-address")).rejects.toThrow(
+      "Invalid address"
+    );
+  });
+
+  it("should return empty array for invalid addresses in getPoolOhlcv", async () => {
+    const result = await client.getPoolOhlcv("not-an-address");
+    expect(result).toEqual([]);
   });
 });

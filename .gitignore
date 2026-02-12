@@ -40,7 +40,8 @@ yarn-error.log*
 /typechain-types
 
 # data store
-/data
+/data/*
+!/data/insights.json
 
 # playwright
 /test-results

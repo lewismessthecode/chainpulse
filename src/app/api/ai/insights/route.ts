@@ -21,13 +21,24 @@ export async function GET(request: Request): Promise<NextResponse> {
     const limit = Number.isFinite(rawLimit) && rawLimit > 0
       ? Math.min(rawLimit, 100)
       : 10;
+    const VALID_CATEGORIES = ["TREND", "RISK", "WHALE_ALERT", "MARKET_INSIGHT"];
     const category = searchParams.get("category");
+    if (category && !VALID_CATEGORIES.includes(category)) {
+      return NextResponse.json(
+        { error: `Invalid category. Must be one of: ${VALID_CATEGORIES.join(", ")}` },
+        { status: 400 },
+      );
+    }
 
     let insights: AIInsight[] = [];
 
     const insightsPath = getInsightsPath();
     if (existsSync(insightsPath)) {
-      insights = JSON.parse(readFileSync(insightsPath, "utf-8"));
+      try {
+        insights = JSON.parse(readFileSync(insightsPath, "utf-8"));
+      } catch {
+        insights = [];
+      }
     }
 
     if (category) {

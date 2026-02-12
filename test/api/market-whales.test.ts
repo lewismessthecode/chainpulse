@@ -5,10 +5,10 @@ const mockGetTokenTransfers = vi.fn();
 const mockGetTokenPrice = vi.fn();
 
 vi.mock("@/lib/data-sources/moralis", () => ({
-  moralis: {
+  getMoralisClient: () => ({
     getTokenTransfers: (...args: unknown[]) => mockGetTokenTransfers(...args),
     getTokenPrice: (...args: unknown[]) => mockGetTokenPrice(...args),
-  },
+  }),
 }));
 
 vi.mock("@/lib/cache", () => ({
