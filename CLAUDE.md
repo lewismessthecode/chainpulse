@@ -12,13 +12,14 @@ ChainPulse is an AI-powered onchain market intelligence dashboard for BNB Chain 
 npm run dev          # Start Next.js dev server (Turbopack)
 npm run build        # Production build
 npm run lint         # ESLint (v9, flat config)
-npx vitest run       # Run all 49 unit tests
+npx vitest run       # Run all unit tests
 npx vitest run test/lib/cache.test.ts          # Run single test file
 npx vitest run -t "should return insights"     # Run test by name
 npx playwright test                            # Run E2E tests (auto-starts dev server)
 npx playwright test --headed                   # E2E with visible browser
 npx hardhat test                               # Smart contract tests
 npx hardhat compile                            # Compile Solidity contracts
+npm run deploy:testnet                         # Deploy contract to BSC testnet
 ```
 
 ## Architecture
@@ -34,7 +35,7 @@ External APIs (DeFiLlama, GeckoTerminal, Moralis)
 Cron/Manual trigger → POST /api/ai/analyze
   → Gemini AI generates insights
   → Writes predictions on-chain (ChainPulseOracle contract)
-  → Saves insights to data/insights.json
+  → Saves insights via insights-store (Vercel Blob in prod, data/insights.json locally)
 ```
 
 ### Key Directories
@@ -47,6 +48,8 @@ Cron/Manual trigger → POST /api/ai/analyze
 - `src/lib/blockchain/` — ethers.js v6 contract helpers, ABI, chain config
 - `src/lib/types.ts` — All shared TypeScript interfaces
 - `src/lib/cache.ts` — In-memory TTL cache used by API routes
+- `src/lib/insights-store.ts` — Insights persistence abstraction (Vercel Blob in production, local file fallback)
+- `src/middleware.ts` — Rate limiting middleware for all API routes (per-IP limits)
 - `contracts/` — Solidity smart contract (ChainPulseOracle.sol, OpenZeppelin, Hardhat)
 - `test/` — Mirrors src structure: `test/api/`, `test/components/`, `test/lib/`, `test/e2e/`, `test/contracts/`
 
@@ -104,8 +107,17 @@ See `.env.example`. Required for full functionality:
 - `NEXT_PUBLIC_BSC_RPC_URL` — BSC RPC endpoint
 - `AGENT_PRIVATE_KEY` — Wallet for writing predictions on-chain
 - `CRON_SECRET` — Bearer token for cron endpoint
+- `DEPLOYER_PRIVATE_KEY` — Wallet for deploying contracts to BSC
+- `BSCSCAN_API_KEY` — BSCScan API key for contract verification
+- `APP_URL` — Server-only app URL for internal API calls
 - `HTTPS_PROXY` / `NO_PROXY` — Optional, for environments behind a firewall. Uses npm `undici` package (not Node.js built-in) for `EnvHttpProxyAgent` support. Configured in `src/instrumentation.ts`.
 
 ## Smart Contract
 
 `ChainPulseOracle.sol` (Solidity 0.8.20) stores AI predictions with content hashes on BSC. Supports batch storage, hash verification, and agent-based access control. ABI is in `src/lib/blockchain/abi.ts`. TypeChain types in `typechain-types/`.
+
+## Deployment
+
+- **Hosting**: Vercel (configured via `vercel.json`)
+- **Cron**: Daily at midnight UTC — triggers `/api/cron/analyze` (Vercel Hobby plan limit: 1 cron job)
+- **Contract deployment**: Hardhat Ignition modules in `ignition/`. History in `ignition/deployments/`.
