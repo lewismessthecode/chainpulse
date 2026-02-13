@@ -1,16 +1,6 @@
-import { existsSync, readFileSync } from "node:fs";
 import { NextResponse } from "next/server";
-import path from "node:path";
 
-import type { AIInsight } from "@/lib/types";
-
-const TMP_PATH = path.join("/tmp", "insights.json");
-const BUNDLED_PATH = path.join(process.cwd(), "data", "insights.json");
-
-function getInsightsPath(): string {
-  if (existsSync(TMP_PATH)) return TMP_PATH;
-  return BUNDLED_PATH;
-}
+import { loadInsights } from "@/lib/insights-store";
 
 export async function GET(request: Request): Promise<NextResponse> {
   try {
@@ -30,16 +20,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       );
     }
 
-    let insights: AIInsight[] = [];
-
-    const insightsPath = getInsightsPath();
-    if (existsSync(insightsPath)) {
-      try {
-        insights = JSON.parse(readFileSync(insightsPath, "utf-8"));
-      } catch {
-        insights = [];
-      }
-    }
+    let insights = await loadInsights();
 
     if (category) {
       insights = insights.filter((insight) => insight.category === category);

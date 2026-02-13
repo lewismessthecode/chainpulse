@@ -22,15 +22,10 @@ vi.mock("@/lib/blockchain/contract", () => ({
   })),
 }));
 
-vi.mock("node:fs", () => {
-  const mocks = {
-    readFileSync: vi.fn(() => "[]"),
-    writeFileSync: vi.fn(),
-    existsSync: vi.fn(() => true),
-    mkdirSync: vi.fn(),
-  };
-  return { ...mocks, default: mocks };
-});
+vi.mock("@/lib/insights-store", () => ({
+  loadInsights: vi.fn(() => Promise.resolve([])),
+  saveInsights: vi.fn(() => Promise.resolve()),
+}));
 
 describe("runAnalysis", () => {
   const marketData: {

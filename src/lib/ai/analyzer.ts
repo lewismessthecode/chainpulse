@@ -1,16 +1,12 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { ethers } from "ethers";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import path from "node:path";
 
 import { getWriteContract } from "@/lib/blockchain/contract";
+import { loadInsights, saveInsights } from "@/lib/insights-store";
 import type { AIInsight, MarketOverview, TokenData, WhaleAlert } from "@/lib/types";
 
 import { buildAnalysisPrompt, SYSTEM_INSTRUCTION } from "./prompts";
 import { analysisResponseSchema } from "./schema";
-
-const INSIGHTS_DIR = process.env.VERCEL ? "/tmp" : path.join(process.cwd(), "data");
-const INSIGHTS_PATH = path.join(INSIGHTS_DIR, "insights.json");
 
 const CATEGORY_MAP: Record<string, number> = {
   TREND: 0,
@@ -80,32 +76,9 @@ export async function runAnalysis(marketData: {
     predictionId: Number(predictionCount) - insights.length + i,
   }));
 
-  const existing = loadInsights();
-  saveInsights([...insightsWithTx, ...existing]);
+  const existing = await loadInsights();
+  await saveInsights([...insightsWithTx, ...existing]);
 
   return { insights: insightsWithTx, txHash: receipt.hash };
 }
 
-const MAX_STORED_INSIGHTS = 500;
-
-function loadInsights(): AIInsight[] {
-  for (const filePath of [INSIGHTS_PATH, path.join(process.cwd(), "data", "insights.json")]) {
-    if (existsSync(filePath)) {
-      try {
-        return JSON.parse(readFileSync(filePath, "utf-8"));
-      } catch {
-        // File corrupted — skip to next or return empty
-      }
-    }
-  }
-  return [];
-}
-
-function saveInsights(insights: AIInsight[]): void {
-  const trimmed = insights.slice(0, MAX_STORED_INSIGHTS);
-  const dir = path.dirname(INSIGHTS_PATH);
-  if (!existsSync(dir)) {
-    mkdirSync(dir, { recursive: true });
-  }
-  writeFileSync(INSIGHTS_PATH, JSON.stringify(trimmed, null, 2));
-}
