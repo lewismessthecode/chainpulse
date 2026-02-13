@@ -1,6 +1,6 @@
 # ChainPulse Runbook
 
-> Auto-generated from `package.json` and `.env.example` on 2026-02-11
+> Auto-generated from `package.json` and `.env.example` on 2026-02-13
 
 ## Deployment
 
@@ -8,9 +8,9 @@
 
 1. Push to `main` branch triggers auto-deploy
 2. Set all env vars from `.env.example` in Vercel dashboard (except `DEPLOYER_PRIVATE_KEY`)
-3. Configure cron in `vercel.json`:
+3. Configure cron in `vercel.json` (daily, midnight UTC — Hobby plan limit):
    ```json
-   { "crons": [{ "path": "/api/cron/analyze", "schedule": "0 */4 * * *" }] }
+   { "crons": [{ "path": "/api/cron/analyze", "schedule": "0 0 * * *" }] }
    ```
 
 ### Smart Contract (BSC)
@@ -62,7 +62,7 @@ Expected: `{"success": true, "insightCount": 3, "txHash": "0x..."}`
 
 ### Key Metrics to Watch
 
-- `data/insights.json` file size (grows with each analysis)
+- Vercel Blob storage usage (insights stored as `insights.json` blob in production)
 - BSC wallet balance (needs tBNB/BNB for gas)
 - Moralis CU usage (40k/day free tier)
 - GeckoTerminal rate limit (30 req/min)
@@ -128,10 +128,18 @@ The contract is immutable once deployed. To "rollback":
 
 ### Data Rollback
 
-Insights are stored in `data/insights.json`. To reset:
+Insights are stored in **Vercel Blob** (production) or `data/insights.json` (local dev). Max 500 insights are retained.
+
+**Production (Vercel Blob):**
+```bash
+# Delete the blob via Vercel dashboard or Vercel Blob API, then re-trigger:
+curl -X POST https://your-app.vercel.app/api/ai/analyze \
+  -H "Authorization: Bearer $CRON_SECRET"
+```
+
+**Local dev:**
 ```bash
 rm data/insights.json
-# Re-trigger analysis to regenerate
 curl -X POST http://localhost:3000/api/ai/analyze \
   -H "Authorization: Bearer $CRON_SECRET"
 ```

@@ -2,7 +2,7 @@
 
 AI-powered onchain market intelligence dashboard for BNB Chain DeFi.
 
-Built with Next.js 16, Tailwind CSS 4, Recharts, ethers.js, and Google Gemini. Features the **Obsidian Terminal** design system -- pure black backgrounds, amber accents, sharp corners, and monospaced numerics.
+Built with Next.js 16, Tailwind CSS 4, Recharts, ethers.js, and Google Gemini.
 
 ## Pages
 

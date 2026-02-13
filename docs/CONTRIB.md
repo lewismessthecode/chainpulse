@@ -1,6 +1,6 @@
 # Contributing to ChainPulse
 
-> Auto-generated from `package.json` and `.env.example` on 2026-02-11
+> Auto-generated from `package.json` and `.env.example` on 2026-02-13
 
 ## Prerequisites
 
@@ -53,9 +53,11 @@ Copy `.env.example` to `.env.local` and configure:
 | `MORALIS_API_KEY` | Yes | Moralis API access (whale data) | [moralis.io](https://moralis.io) free tier |
 | `GEMINI_API_KEY` | Yes | Google Gemini for AI analysis | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) |
 | `CRON_SECRET` | Yes | Bearer token for cron endpoint | Self-generated hex string |
+| `BSCSCAN_API_KEY` | No | BscScan API key for contract verification | [bscscan.com](https://bscscan.com) |
 | `HTTPS_PROXY` | No | HTTP proxy for server-side API calls | Only if behind a firewall |
 | `NO_PROXY` | No | Hosts to bypass proxy | e.g. `localhost,127.0.0.1` |
-| `NEXT_PUBLIC_APP_URL` | No | App URL (default: `http://localhost:3000`) | Pre-filled |
+| `APP_URL` | No | Server-only app URL for internal API calls | Defaults to `http://localhost:3000` |
+| `NEXT_PUBLIC_APP_URL` | No | Public app URL (default: `http://localhost:3000`) | Pre-filled |
 
 ## Development Workflow
 
@@ -122,14 +124,16 @@ docs/              # Plans and documentation
 
 ## Design System
 
-"Obsidian Terminal" theme:
-- Background: pure black (`#000`)
-- Accent: amber (`#D4A017` / `#E2A336`)
-- Display font: Instrument Serif
+"Clean Data Studio" theme with light/dark mode (`next-themes`, `attribute="class"`):
+- **Light mode**: warm-tinted whites (`hsl(40, 10%, 98%)` background)
+- **Dark mode**: rich dark grays (`hsl(225, 15%, 10%)` background, not pure black)
+- Accent: amber/gold (BNB Chain brand) — `hsl(38, 80%, 50%)` light / `hsl(38, 80%, 55%)` dark
+- Display font: Geist (`font-display` class)
 - Body font: Plus Jakarta Sans
 - Data font: JetBrains Mono (monospaced numerics)
-- Border-radius: always 0 (sharp corners)
-- Animations: ease-out only, no bounce/spring
+- Border-radius: `0.5rem` (8px) — modern rounded corners
+- Animations: ease-out only, Framer Motion for transitions
+- CSS tokens: `bg-surface`, `bg-elevated`, `text-text-primary`, `text-accent-theme`, etc. in `globals.css`
 
 ## External API Rate Limits
 
